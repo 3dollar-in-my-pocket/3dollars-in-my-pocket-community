@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
-import java.time.LocalDateTime;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Coupon extends BaseEntity {
+public class CouponTemplate extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String workspaceId;
@@ -54,7 +52,7 @@ public class Coupon extends BaseEntity {
     private String accountId;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Coupon(String workspaceId, String targetId, String name, CouponType couponType,
+    public CouponTemplate(String workspaceId, String targetId, String name, CouponType couponType,
         CouponTag couponTag, CouponStatus status, CouponGroup couponGroup, CouponTime couponTime, long count, String accountId) {
         this.workspaceId = workspaceId;
         this.targetId = targetId;
@@ -68,9 +66,9 @@ public class Coupon extends BaseEntity {
         this.accountId = accountId;
     }
 
-    public static Coupon newInstance(String workspaceId, String targetId, String name,
+    public static CouponTemplate newInstance(String workspaceId, String targetId, String name,
         CouponType couponType, CouponTag couponTag, CouponGroup couponGroup,  long count, CouponTime couponTime, String accountId) {
-        return Coupon.builder()
+        return CouponTemplate.builder()
             .couponType(couponType)
             .workspaceId(workspaceId)
             .targetId(targetId)
