@@ -25,6 +25,6 @@ dependencies {
     // Sentry
 
     implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.20.0'
-    implementation("io.sentry:sentry-logback:7.20.0")
+    implementation("io.sentry:sentry-logback:7.20.1")
 
 }
