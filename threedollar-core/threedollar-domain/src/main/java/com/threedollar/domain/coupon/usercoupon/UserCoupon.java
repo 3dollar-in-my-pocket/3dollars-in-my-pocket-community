@@ -41,20 +41,16 @@ public class UserCoupon extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CouponUsageStatus usageStatus;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserCouponStatus userCouponStatus;
 
     @Builder(access = AccessLevel.PROTECTED)
     public UserCoupon(Long couponId, String workspaceId, CouponGroup couponGroup, String accountId, LocalDateTime usedAt,
-        CouponUsageStatus usageStatus, UserCouponStatus status) {
+        CouponUsageStatus usageStatus) {
         this.couponId = couponId;
         this.workspaceId = workspaceId;
         this.couponGroup = couponGroup;
         this.accountId = accountId;
         this.usedAt = usedAt;
         this.usageStatus = usageStatus;
-        this.userCouponStatus = status;
     }
 
     public static UserCoupon newInstance(@NotNull Long couponId, @NotBlank String workspaceId,
@@ -64,7 +60,6 @@ public class UserCoupon extends BaseEntity {
             .accountId(accountId)
             .workspaceId(workspaceId)
             .couponGroup(couponGroup)
-            .status(UserCouponStatus.ACTIVE)
             .usageStatus(CouponUsageStatus.UNUSED)
             .usedAt(usedAt)
             .build();
