@@ -2,12 +2,6 @@ name: "운영계 배포"
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Release Version"
-        required: true
-        type: string
-        default: 'v0.0.7'
 
 jobs:
   validate-version:
@@ -46,8 +40,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{  secrets.PROD_AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{  secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{  secrets.PROD_AWS_ACCESS_KEY_ID_V2 }}
+          aws-secret-access-key: ${{  secrets.PROD_AWS_SECRET_ACCESS_KEY_V2 }}
           aws-region: ap-northeast-2
 
       - name: Login to Amazon ECR
@@ -74,7 +68,7 @@ jobs:
         id: build
         env:
           DOCKER_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          DOCKER_REPOSITORY: 3dollar-community-api
+          DOCKER_REPOSITORY: threedollars-in-my-pocket-community-api-prod
           IMAGE_TAG: ${{  steps.version.outputs.version }}
           PINPOINT_COLLECTOR_IP: ${{ secrets.PINPOINT_COLLECTOR_IP_PROD }}
         run: |
@@ -104,7 +98,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{  steps.render-api-container.outputs.task-definition  }}
-          cluster: three-dollar-community-ecs
-          service: community-api-rpd
+          cluster: threedollars-prod-v1
+          service: threedollar-community-api-prod-v1
           wait-for-service-stability: true
 
