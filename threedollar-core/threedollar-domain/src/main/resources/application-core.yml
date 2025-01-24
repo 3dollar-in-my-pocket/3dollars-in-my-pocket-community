@@ -17,7 +17,7 @@ spring:
     redis:
       timeout: 3000
       connect-timeout: 3000
-      database: 0
+      database: 1
       repositories:
         enabled: false
 
