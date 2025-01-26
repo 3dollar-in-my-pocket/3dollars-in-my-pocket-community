@@ -17,6 +17,10 @@ import jakarta.validation.Valid;
 
 import java.time.LocalDateTime;
 
+import java.util.List;
+
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,6 +124,21 @@ public class PostController {
         return ApiResponse.success(postFacadeService.getPostCountByTargetId(workspaceContext.getWorkspaceId(),
             postCountRequest.getPostGroup(), postCountRequest.getTargetId(), postCountRequest.getStartTime(),
             postCountRequest.getEndTime()));
+    }
+
+
+    @Operation(summary = "[소식] 소식을 다건 조회 합니다.")
+    @GetMapping("/v1/post-group/{postGroup}/target/{targetId}/post")
+    public ApiResponse<List<PostResponse>> getPostByTarget(
+        @RequestApiKey ApiKeyContext workspaceId,
+        @PathVariable PostGroup postGroup,
+        @PathVariable String targetId,
+        @RequestParam Set<Long> postIds,
+        @RequestParam(required = false) String accountId) {
+
+        return ApiResponse.success(postService.getPostsByPostIds(
+            workspaceId.getWorkspaceId(), postGroup, targetId, postIds, accountId)
+        );
     }
 
 
