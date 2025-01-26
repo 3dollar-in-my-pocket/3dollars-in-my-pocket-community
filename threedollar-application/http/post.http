@@ -63,3 +63,9 @@ GET {{host_api}}/community/v1/batch/post/count?startTime=2022-01-01T00:00:00&end
 X-Community-Api-Key: {{api_key}}
 Content-Type: application/json
 
+
+### Post 다건 조회 API
+GET {{host_api}}/community/v1/post-group/STORE_NEWS/target/3/post?postIds=7,8,9&accountId=USER222
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+

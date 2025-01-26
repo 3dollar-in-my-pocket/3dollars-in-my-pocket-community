@@ -15,6 +15,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,6 +126,18 @@ public class PostService {
 
         return postRepository.existPostByPostGroupAndPostIdAndTargetId(postGroup, postId, targetId);
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsByPostIds(String workspaceId, PostGroup postGroup,
+        String targetId, Set<Long> postIds, String accountId) {
+
+        List<Post> posts = postRepository.findByPostGroupAndTargetIdAndWorkspaceIdAndIdIn(postGroup, targetId,
+            workspaceId, postIds);
+
+        return posts.stream()
+            .map(post -> PostResponse.of(post, accountId))
+            .collect(Collectors.toList());
     }
 
     private List<PostSection> getPostSections(PostUpdateRequest request, Post post) {
