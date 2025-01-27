@@ -65,7 +65,7 @@ Content-Type: application/json
 
 
 ### Post 다건 조회 API
-GET {{host_api}}/community/v1/post-group/STORE_NEWS/target/3/post?postIds=7,8,9&accountId=USER222
+GET {{host_api}}/community/v1/post-group/STORE_NEWS/target/3/posts/bulk?postIds=7,8,9&accountId=USER222
 X-Community-Api-Key: {{api_key}}
 Content-Type: application/json
 

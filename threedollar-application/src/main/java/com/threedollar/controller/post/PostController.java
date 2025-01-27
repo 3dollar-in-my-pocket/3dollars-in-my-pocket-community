@@ -128,7 +128,7 @@ public class PostController {
 
 
     @Operation(summary = "[소식] 소식을 다건 조회 합니다.")
-    @GetMapping("/v1/post-group/{postGroup}/target/{targetId}/post")
+    @GetMapping("/v1/post-group/{postGroup}/target/{targetId}/posts/bulk")
     public ApiResponse<List<PostResponse>> getPostByTarget(
         @RequestApiKey ApiKeyContext workspaceId,
         @PathVariable PostGroup postGroup,
