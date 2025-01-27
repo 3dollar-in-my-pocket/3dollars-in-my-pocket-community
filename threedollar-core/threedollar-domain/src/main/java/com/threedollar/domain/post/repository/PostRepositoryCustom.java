@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 
 public interface PostRepositoryCustom {
@@ -45,4 +46,7 @@ public interface PostRepositoryCustom {
     boolean existPostByPostGroupAndPostIdAndTargetId(PostGroup postGroup,
         Long postId,
         String targetId);
+
+    List<Post> findByPostGroupAndTargetIdAndWorkspaceIdAndIdIn(PostGroup postGroup, String targetId,
+        String workspaceId, Set<Long> ids);
 }

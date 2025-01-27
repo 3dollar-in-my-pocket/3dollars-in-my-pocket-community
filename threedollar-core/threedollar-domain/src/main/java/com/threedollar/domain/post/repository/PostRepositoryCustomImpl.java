@@ -1,6 +1,5 @@
 package com.threedollar.domain.post.repository;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.threedollar.common.QuerydslUtil;
 import com.threedollar.domain.post.Post;
@@ -9,9 +8,7 @@ import com.threedollar.domain.post.PostStatus;
 
 import java.time.LocalDateTime;
 
-import java.util.Objects;
-
-import java.util.function.Predicate;
+import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
@@ -131,6 +128,23 @@ public class PostRepositoryCustomImpl implements PostRepositoryCustom {
                 post.status.eq(PostStatus.ACTIVE)
             ).fetchFirst();
         return fetchOne != null;
+    }
+
+    @Override
+    public List<Post> findByPostGroupAndTargetIdAndWorkspaceIdAndIdIn(PostGroup postGroup,
+        String targetId, String workspaceId, Set<Long> ids) {
+
+        return jpaQueryFactory.selectFrom(post)
+            .where(
+                post.workspaceId.eq(workspaceId),
+                post.postGroup.eq(postGroup),
+                post.targetId.eq(targetId),
+                post.id.in(ids)
+            )
+            .leftJoin(post.postSection, postSection)
+            .fetchJoin()
+            .fetch();
+
     }
 
 }
