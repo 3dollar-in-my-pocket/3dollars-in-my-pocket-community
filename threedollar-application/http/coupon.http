@@ -1,3 +1,8 @@
 ### User 의 Coupon 조회
 GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons?accountId=222
 X-Community-Api-Key: {{api_key}}
+
+
+### Coupon 이 있을 때 조회
+GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/target/1?accountId=222
+X-Community-Api-Key: {{api_key}}
