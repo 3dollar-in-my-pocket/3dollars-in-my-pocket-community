@@ -1,0 +1,3 @@
+### User 의 Coupon 조회
+GET {{host_api}}/community/v1/coupon-group/{couponGroup}/coupons
+X-Community-Api-Key: {{api_key}}
