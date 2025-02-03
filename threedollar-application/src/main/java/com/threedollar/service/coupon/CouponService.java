@@ -1,7 +1,9 @@
 package com.threedollar.service.coupon;
 
+import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.repository.CouponRepository;
+import com.threedollar.service.coupon.dto.request.AddCouponRequest;
 import com.threedollar.service.coupon.dto.response.CouponAndCursorResponse;
 import com.threedollar.service.coupon.dto.response.CouponResponse;
 
@@ -28,10 +30,14 @@ public class CouponService {
             return CouponAndCursorResponse.noMore(couponList);
         }
         return CouponAndCursorResponse.hasNext(couponList);
-
-
     }
 
 
+    @Transactional
+    public void addCoupon(String workspaceId, CouponGroup couponGroup, String targetId,
+        AddCouponRequest request) {
+        Coupon coupon = request.toEntity(workspaceId, couponGroup, targetId);
+        couponRepository.save(coupon);
+    }
 
 }

@@ -5,12 +5,16 @@ import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.service.coupon.CouponService;
+import com.threedollar.service.coupon.dto.request.AddCouponRequest;
 import com.threedollar.service.coupon.dto.response.CouponAndCursorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,4 +36,12 @@ public class CouponController {
 
     }
 
+    @PostMapping("/v1/coupon-group/{couponGroup}/target/{targetId}")
+    @Operation(summary = "[쿠폰] 유저가 쿠폰을 발급합니다.")
+    public ApiResponse<String> couponResponse(@RequestApiKey ApiKeyContext workspaceId,
+        @PathVariable CouponGroup couponGroup, @PathVariable String targetId,
+        @Valid @RequestBody AddCouponRequest addCouponRequest) {
+        couponService.addCoupon(workspaceId.getWorkspaceId(), couponGroup, targetId, addCouponRequest);
+        return ApiResponse.OK;
+    }
 }
