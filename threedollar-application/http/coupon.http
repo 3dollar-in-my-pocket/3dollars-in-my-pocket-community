@@ -3,6 +3,25 @@ GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons?accountI
 X-Community-Api-Key: {{api_key}}
 
 
-### Coupon 이 있을 때 조회
-GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/target/1?accountId=222
+### User가 발급한 쿠폰들을 조회합니다.
+GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/target/1?accountId=USER222
 X-Community-Api-Key: {{api_key}}
+
+
+### Coupon 생성
+POST {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/target/1
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+
+{
+  "name": "할인쿠폰",
+  "couponType": "UNLIMITED",
+  "couponTag": "BOSS_EVENT",
+  "couponTime": {
+    "startTime": "2025-02-03T12:11:17.597Z",
+    "endTime": "2025-02-02T12:11:17.597Z"
+  },
+  "count": 10,
+  "accountId": "USER222"
+}
+
