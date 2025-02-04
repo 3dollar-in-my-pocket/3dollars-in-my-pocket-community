@@ -30,7 +30,7 @@ public class UserCouponController {
         @RequestApiKey ApiKeyContext workspaceId,
         @PathVariable CouponGroup couponGroup,
         @RequestParam String accountId,
-        CouponUsageStatus couponUsageStatus) {
+        @RequestParam CouponUsageStatus couponUsageStatus) {
         return ApiResponse.success(userCouponService.getUserCouponList(workspaceId.getWorkspaceId(), couponGroup,
             accountId, couponUsageStatus));
     }
