@@ -19,12 +19,12 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
 
     @Override
     public List<Coupon> findByCouponInfoAndSize(String workspaceId,
-        CouponGroup couponGroup, String targetId, String accountId, int size) {
+        CouponGroup couponGroup, String targetId, int size) {
         return jpaQueryFactory.selectFrom(coupon)
             .where(
                 coupon.workspaceId.eq(workspaceId),
                 coupon.targetId.eq(targetId),
-                coupon.accountId.eq(accountId)
+                coupon.couponGroup.eq(couponGroup)
             ).orderBy(coupon.id.desc())
             .limit(size)
             .fetch();

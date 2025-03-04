@@ -21,9 +21,9 @@ public class CouponService {
 
     @Transactional(readOnly = true)
     public CouponAndCursorResponse getCoupons(String workspaceId, CouponGroup couponGroup,
-        String targetId, String accountId, int size) {
+        String targetId, int size) {
         List<CouponResponse> couponList = couponRepository.findByCouponInfoAndSize(
-            workspaceId, couponGroup, targetId, accountId, size + 1)
+            workspaceId, couponGroup, targetId, size + 1)
             .stream().map(CouponResponse::of).toList();
 
         if (couponList.isEmpty() || couponList.size() <= size) {

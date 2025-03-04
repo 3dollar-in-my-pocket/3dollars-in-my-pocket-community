@@ -30,9 +30,8 @@ public class CouponController {
         @RequestApiKey ApiKeyContext workspaceId,
         @PathVariable CouponGroup couponGroup,
         @PathVariable String targetId,
-        @RequestParam String accountId,
         @RequestParam(defaultValue = "20", required = false) Integer size) {
-        return ApiResponse.success(couponService.getCoupons(workspaceId.getWorkspaceId(), couponGroup, targetId, accountId, size));
+        return ApiResponse.success(couponService.getCoupons(workspaceId.getWorkspaceId(), couponGroup, targetId, size));
 
     }
 

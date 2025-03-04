@@ -16,8 +16,6 @@ public class CouponResponse {
 
     private Long couponId;
 
-    private String workspaceId;
-
     private String targetId;
 
     private String name;
@@ -30,19 +28,18 @@ public class CouponResponse {
 
     private CouponStatus couponStatus;
 
-    private long count;
+    private Long count;
 
     private CouponTime couponTime;
 
     private String accountId;
 
     @Builder
-    public CouponResponse(Long couponId, String workspaceId, String targetId, String name,
+    public CouponResponse(Long couponId, String targetId, String name,
         CouponTag couponTag, CouponType couponType, CouponGroup couponGroup,
         CouponStatus couponStatus,
-        long count, CouponTime couponTime, String accountId) {
+        Long count, CouponTime couponTime, String accountId) {
         this.couponId = couponId;
-        this.workspaceId = workspaceId;
         this.targetId = targetId;
         this.name = name;
         this.couponTag = couponTag;
@@ -57,16 +54,23 @@ public class CouponResponse {
     public static CouponResponse of(Coupon coupon) {
         return CouponResponse.builder()
             .couponId(coupon.getId())
-            .workspaceId(coupon.getWorkspaceId())
             .targetId(coupon.getTargetId())
             .name(coupon.getName())
             .couponTag(coupon.getCouponTag())
             .couponType(coupon.getCouponType())
             .couponGroup(coupon.getCouponGroup())
             .couponStatus(coupon.getStatus())
-            .count(coupon.getCount())
+            .count(getCouponCount(coupon))
             .couponTime(coupon.getCouponTime())
             .accountId(coupon.getAccountId())
             .build();
     }
+
+    private static Long getCouponCount(Coupon coupon) {
+        if (coupon.getCouponType() == CouponType.LIMITED) {
+            return coupon.getCount();
+        }
+        return null;
+    }
+
 }
