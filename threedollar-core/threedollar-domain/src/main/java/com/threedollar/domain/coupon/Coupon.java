@@ -45,7 +45,7 @@ public class Coupon extends BaseEntity {
     private CouponTag couponTag;
 
     @Column(nullable = false)
-    private long count;
+    private Long count;
 
     @Embedded
     private CouponTime couponTime;
@@ -55,7 +55,7 @@ public class Coupon extends BaseEntity {
 
     @Builder(access = AccessLevel.PRIVATE)
     public Coupon(String workspaceId, String targetId, String name, CouponType couponType,
-        CouponTag couponTag, CouponStatus status, CouponGroup couponGroup, CouponTime couponTime, long count, String accountId) {
+        CouponTag couponTag, CouponStatus status, CouponGroup couponGroup, CouponTime couponTime, Long count, String accountId) {
         this.workspaceId = workspaceId;
         this.targetId = targetId;
         this.name = name;
@@ -69,7 +69,8 @@ public class Coupon extends BaseEntity {
     }
 
     public static Coupon newInstance(String workspaceId, String targetId, String name,
-        CouponType couponType, CouponTag couponTag, CouponGroup couponGroup,  long count, CouponTime couponTime, String accountId) {
+        CouponType couponType, CouponTag couponTag, CouponGroup couponGroup, Long count,
+        CouponTime couponTime, String accountId) {
         return Coupon.builder()
             .couponType(couponType)
             .workspaceId(workspaceId)
