@@ -5,12 +5,10 @@ import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponUsageStatus;
-import com.threedollar.service.usercoupon.dto.response.UserCouponResponse;
+import com.threedollar.service.usercoupon.dto.response.UserCouponAndCursorResponse;
 import com.threedollar.service.usercoupon.dto.response.UserCouponService;
 
 import io.swagger.v3.oas.annotations.Operation;
-
-import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +23,16 @@ public class UserCouponController {
     private final UserCouponService userCouponService;
 
     @GetMapping("/v1/coupon-group/{couponGroup}/coupons")
-    @Operation(summary = "[사용자 쿠폰] 사용자가 보유한 쿠폰을 조회합니다.")
-    public ApiResponse<List<UserCouponResponse>> userCoupons(
+    @Operation(summary = "[사용자 쿠폰] 유저가 발급 받은 쿠폰을 조회합니다.")
+    public ApiResponse<UserCouponAndCursorResponse> userCoupons(
         @RequestApiKey ApiKeyContext workspaceId,
         @PathVariable CouponGroup couponGroup,
         @RequestParam String accountId,
-        @RequestParam CouponUsageStatus couponUsageStatus) {
+        @RequestParam CouponUsageStatus couponUsageStatus,
+        @RequestParam(required = false) Long cursor,
+        @RequestParam int size) {
         return ApiResponse.success(userCouponService.getUserCouponList(workspaceId.getWorkspaceId(), couponGroup,
-            accountId, couponUsageStatus));
+            accountId, couponUsageStatus, cursor, size));
     }
 
 }

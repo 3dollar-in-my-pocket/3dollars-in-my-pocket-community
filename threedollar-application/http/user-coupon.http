@@ -1,0 +1,4 @@
+### 유저가 발급받은 쿠폰을 조회합니다.
+GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons?accountId=USER222&couponUsageStatus=UNUSED&size=3
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
