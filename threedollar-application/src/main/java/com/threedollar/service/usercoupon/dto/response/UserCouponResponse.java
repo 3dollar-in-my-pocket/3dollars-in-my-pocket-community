@@ -1,10 +1,13 @@
 package com.threedollar.service.usercoupon.dto.response;
 
+import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 
 import com.threedollar.domain.coupon.CouponUsageStatus;
 
 import com.threedollar.domain.coupon.usercoupon.UserCoupon;
+
+import com.threedollar.service.coupon.dto.response.CouponResponse;
 
 import java.time.LocalDateTime;
 
@@ -28,18 +31,21 @@ public class UserCouponResponse {
 
     private CouponUsageStatus couponUsageStatus;
 
+    private CouponResponse coupon;
+
     @Builder
     public UserCouponResponse(Long couponId, String workspaceId, CouponGroup couponGroup,
-        String accountId, LocalDateTime usedAt, CouponUsageStatus couponUsageStatus) {
+        String accountId, LocalDateTime usedAt, CouponUsageStatus couponUsageStatus, CouponResponse coupon) {
         this.couponId = couponId;
         this.workspaceId = workspaceId;
         this.couponGroup = couponGroup;
         this.accountId = accountId;
         this.usedAt = usedAt;
         this.couponUsageStatus = couponUsageStatus;
+        this.coupon = coupon;
     }
 
-    public static UserCouponResponse of(UserCoupon userCoupon) {
+    public static UserCouponResponse of(UserCoupon userCoupon, Coupon coupon) {
         return UserCouponResponse.builder()
             .couponId(userCoupon.getCouponId())
             .workspaceId(userCoupon.getWorkspaceId())
@@ -47,6 +53,7 @@ public class UserCouponResponse {
             .accountId(userCoupon.getAccountId())
             .couponUsageStatus(userCoupon.getUsageStatus())
             .usedAt(userCoupon.getUsedAt())
+            .coupon(CouponResponse.of(coupon))
             .build();
     }
 }

@@ -3,7 +3,7 @@ GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons?accountI
 X-Community-Api-Key: {{api_key}}
 
 
-### User가 발급한 쿠폰들을 조회합니다.
+### [Coupon] 유저(사장님)가 발급한 쿠폰들을 조회합니다.
 GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/target/1?accountId=USER222
 X-Community-Api-Key: {{api_key}}
 
@@ -21,7 +21,7 @@ Content-Type: application/json
     "startTime": "2025-02-03T12:11:17.597Z",
     "endTime": "2025-02-02T12:11:17.597Z"
   },
-  "count": 10,
-  "accountId": "USER222"
+  "accountId": "USER222",
+  "count": 3
 }
 

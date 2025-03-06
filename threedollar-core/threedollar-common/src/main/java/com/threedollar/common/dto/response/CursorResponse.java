@@ -21,4 +21,20 @@ public class CursorResponse {
         this.nextCursor = nextCursor;
     }
 
+    public static CursorResponse hasNext(Long nextCursor) {
+        return CursorResponse.builder()
+            .hasNext(true)
+            .hasMore(true)
+            .nextCursor(nextCursor)
+            .build();
+    }
+
+    public static CursorResponse noMore() {
+        return CursorResponse.builder()
+            .hasNext(false)
+            .hasMore(false)
+            .nextCursor(null)
+            .build();
+    }
+
 }
