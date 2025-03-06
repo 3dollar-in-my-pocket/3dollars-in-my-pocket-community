@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 @NoArgsConstructor
 @Getter
@@ -25,13 +26,14 @@ public class AddCouponRequest {
 
     private CouponTime couponTime;
 
+    @Nullable
     private Long count;
 
     @NotBlank
     private String accountId;
 
     public AddCouponRequest(String name, CouponType couponType, CouponTag couponTag,
-        CouponTime couponTime, Long count, String accountId) {
+        CouponTime couponTime, @Nullable Long count, String accountId) {
         this.name = name;
         this.couponType = couponType;
         this.couponTag = couponTag;
@@ -42,6 +44,13 @@ public class AddCouponRequest {
 
     public Coupon toEntity(String workspaceId, CouponGroup couponGroup, String targetId) {
         return Coupon.newInstance(workspaceId, targetId, name, couponType, couponTag,
-            couponGroup, count, couponTime, accountId);
+            couponGroup, getCouponCount(couponType, count), couponTime, accountId);
+    }
+
+    private Long getCouponCount(CouponType couponType, @Nullable Long count) {
+        if (couponType == CouponType.UNLIMITED || count == null) {
+            return null;
+        }
+        return count;
     }
 }
