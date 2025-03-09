@@ -25,7 +25,7 @@ public class CouponController {
     private final CouponService couponService;
 
     @GetMapping("/v1/coupon-group/{couponGroup}/target/{targetId}")
-    @Operation(summary = "[쿠폰] 유저가 발급한 쿠폰들을 조회합니다.")
+    @Operation(summary = "[쿠폰] 사장님(유저)이 발급한 쿠폰들을 조회합니다.")
     public ApiResponse<CouponAndCursorResponse> couponAndCursorResponseApiResponse(
         @RequestApiKey ApiKeyContext workspaceId,
         @PathVariable CouponGroup couponGroup,
@@ -36,7 +36,7 @@ public class CouponController {
     }
 
     @PostMapping("/v1/coupon-group/{couponGroup}/target/{targetId}")
-    @Operation(summary = "[쿠폰] 유저가 쿠폰을 발급합니다.")
+    @Operation(summary = "[쿠폰] 사장님(유저)가 쿠폰을 발급합니다.")
     public ApiResponse<String> couponResponse(@RequestApiKey ApiKeyContext workspaceId,
         @PathVariable CouponGroup couponGroup, @PathVariable String targetId,
         @Valid @RequestBody AddCouponRequest addCouponRequest) {
