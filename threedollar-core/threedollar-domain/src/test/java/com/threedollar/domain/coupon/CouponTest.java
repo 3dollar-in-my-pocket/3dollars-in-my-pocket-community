@@ -1,0 +1,60 @@
+package com.threedollar.domain.coupon;
+
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import org.junit.jupiter.api.Test;
+
+public class CouponTest {
+
+    @Test
+    void 쿠폰의_수량이_존재하지_않을때() {
+        // given
+        Coupon coupon = getCoupon();
+
+        // when
+        coupon.descrease(LocalDateTime.of(2025,3,9,1,1,1));
+
+        // then
+        assertThat(coupon.getCount()).isEqualTo(0);
+
+    }
+
+    @Test
+    void 유효하지_않은_쿠폰을_사용할_때_에러가_발생한다() {
+        // given
+        Coupon coupon = getCoupon();
+        // when
+        LocalDateTime useTime = LocalDateTime.of(2025,3,8,23,59,59);
+
+        // when & then
+        assertThatThrownBy(() -> coupon.descrease(useTime))
+            .isInstanceOf(IllegalArgumentException.class);
+
+    }
+
+    private Coupon getCoupon() {
+        String workspaceId = "threedollar-test";
+        String targetId = "USER1";
+        String name = "테스트 쿠폰";
+        CouponType couponType = CouponType.LIMITED;
+        CouponTag couponTag = CouponTag.BOSS_EVENT;
+        CouponGroup couponGroup = CouponGroup.BOSS_STORE;
+        Long count = 1L;
+        String accountId = "1";
+        CouponTime couponTime = new CouponTime(
+            LocalDateTime.of(2025, 3,9,0,0,0),
+            LocalDateTime.of(2025, 3, 10, 0,0,0)
+        );
+
+        return Coupon.newInstance(workspaceId, targetId, name, couponType, couponTag,
+            couponGroup,
+            count,
+            couponTime,
+            accountId);
+
+    }
+}
