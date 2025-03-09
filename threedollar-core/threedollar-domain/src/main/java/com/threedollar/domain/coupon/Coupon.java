@@ -85,15 +85,17 @@ public class Coupon extends BaseEntity {
             .build();
     }
 
-    public void descrease(LocalDateTime now) {
+    public void issueCoupon(LocalDateTime now) {
         // Validate time
         if (now.isBefore(couponTime.getStartTime()) || now.isAfter(couponTime.getEndTime())) {
             throw new IllegalArgumentException("쿠폰 사용 가능한 시간이 아닙니다.");
         }
-        if (this.count <= 0) {
-            throw new IllegalArgumentException("쿠폰의 재고가 부족합니다.");
+        if (this.couponType.equals(CouponType.LIMITED)) {
+            if (this.count <= 0) {
+                throw new IllegalArgumentException("쿠폰의 재고가 부족합니다.");
+            }
+            this.count -= 1;
         }
-        this.count -= 1;
     }
 
 }
