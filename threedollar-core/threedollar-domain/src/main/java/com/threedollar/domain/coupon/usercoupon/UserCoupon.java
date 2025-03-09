@@ -54,14 +54,17 @@ public class UserCoupon extends BaseEntity {
     }
 
     public static UserCoupon newInstance(@NotNull Long couponId, @NotBlank String workspaceId,
-        @NotNull CouponGroup couponGroup, @NotBlank String accountId, @Nullable LocalDateTime usedAt) {
+        @NotNull CouponGroup couponGroup, @NotBlank String accountId) {
         return UserCoupon.builder()
             .couponId(couponId)
             .accountId(accountId)
             .workspaceId(workspaceId)
             .couponGroup(couponGroup)
             .usageStatus(CouponUsageStatus.UNUSED)
-            .usedAt(usedAt)
             .build();
+    }
+
+    public void useCoupon() {
+        this.usedAt = LocalDateTime.now();
     }
 }
