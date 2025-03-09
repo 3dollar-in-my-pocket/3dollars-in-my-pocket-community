@@ -16,7 +16,7 @@ public class CouponTest {
         Coupon coupon = getCoupon();
 
         // when
-        coupon.descrease(LocalDateTime.of(2025,3,9,1,1,1));
+        coupon.issueCoupon(LocalDateTime.of(2025,3,9,1,1,1));
 
         // then
         assertThat(coupon.getCount()).isEqualTo(0);
@@ -31,7 +31,7 @@ public class CouponTest {
         LocalDateTime useTime = LocalDateTime.of(2025,3,8,23,59,59);
 
         // when & then
-        assertThatThrownBy(() -> coupon.descrease(useTime))
+        assertThatThrownBy(() -> coupon.issueCoupon(useTime))
             .isInstanceOf(IllegalArgumentException.class);
 
     }

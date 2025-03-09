@@ -1,15 +1,18 @@
 package com.threedollar.service.usercoupon.dto.response;
 
 import com.threedollar.common.dto.response.CursorResponse;
+import com.threedollar.common.exception.NotFoundException;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponUsageStatus;
+import com.threedollar.domain.coupon.repository.CouponRepository;
 import com.threedollar.domain.coupon.repository.UserCouponRepository;
 
 import com.threedollar.domain.coupon.usercoupon.UserCoupon;
 
 import com.threedollar.service.coupon.CouponServiceHelper;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,6 +28,7 @@ public class UserCouponService {
     private final UserCouponRepository userCouponRepository;
 
     private final CouponServiceHelper couponServiceHelper;
+    private final CouponRepository couponRepository;
 
     @Transactional(readOnly = true)
     public UserCouponAndCursorResponse getUserCouponList(String workspaceId, CouponGroup couponGroup,
@@ -57,6 +61,20 @@ public class UserCouponService {
             .cursorResponse(CursorResponse.hasNext(coupons.get(coupons.size() - 1).getId()))
             .userCouponResponses(userCouponResponses)
             .build();
+    }
+
+    @Transactional
+    public void issueCoupon(String workspaceId, CouponGroup couponGroup, String accountId, Long couponId) {
+        Coupon coupon = couponRepository.findWithLockById(couponId);
+        if (coupon == null) {
+            throw new NotFoundException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",  couponId));
+        }
+
+        coupon.issueCoupon(LocalDateTime.now());
+        UserCoupon userCoupon = UserCoupon.newInstance(couponId, workspaceId, couponGroup,
+            accountId);
+        userCouponRepository.save(userCoupon);
+
     }
 
 

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,4 +36,13 @@ public class UserCouponController {
             accountId, couponUsageStatus, cursor, size));
     }
 
+    @PostMapping("/v1/coupon-group/{couponGroup}/coupons/{couponId}")
+    @Operation(summary = "[사용자 쿠폰] 사용자가 쿠폰을 발급 받습니다.")
+    public ApiResponse<String> issueCoupon(@PathVariable CouponGroup couponGroup,
+    @PathVariable Long couponId,
+    @RequestApiKey ApiKeyContext workspaceId,
+    @RequestParam String accountId) {
+        userCouponService.issueCoupon(workspaceId.getWorkspaceId(), couponGroup, accountId, couponId);
+        return ApiResponse.OK;
+    }
 }
