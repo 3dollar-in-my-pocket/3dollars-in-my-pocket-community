@@ -85,10 +85,10 @@ public class Coupon extends BaseEntity {
             .build();
     }
 
-    public void issueCoupon(LocalDateTime now) {
+    public void issueCoupon() {
         // Validate time
-        if (now.isBefore(couponTime.getStartTime()) || now.isAfter(couponTime.getEndTime())) {
-            throw new IllegalArgumentException("쿠폰 사용 가능한 시간이 아닙니다.");
+        if (LocalDateTime.now().isBefore(couponTime.getStartTime()) || LocalDateTime.now().isAfter(couponTime.getEndTime())) {
+            throw new IllegalArgumentException("쿠폰 발급 가능한 시간이 아닙니다.");
         }
         if (this.couponType.equals(CouponType.LIMITED)) {
             if (this.count <= 0) {
