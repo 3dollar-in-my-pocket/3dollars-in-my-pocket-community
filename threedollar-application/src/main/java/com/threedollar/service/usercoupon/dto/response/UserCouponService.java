@@ -1,6 +1,7 @@
 package com.threedollar.service.usercoupon.dto.response;
 
 import com.threedollar.common.dto.response.CursorResponse;
+import com.threedollar.common.exception.InvalidException;
 import com.threedollar.common.exception.NotFoundException;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
@@ -65,14 +66,22 @@ public class UserCouponService {
 
     @Transactional
     public void issueCoupon(String workspaceId, CouponGroup couponGroup, String accountId, Long couponId) {
+        boolean existsCoupon = userCouponRepository.existsByWorkspaceIdAndCouponGroupAndCouponIdAndAccountId(
+            workspaceId, couponGroup, couponId, accountId
+        );
+        if (existsCoupon) {
+            throw new InvalidException(String.format("유저(%s) 가 발급 받은 쿠폰 (%s) 이 이미 존재합니다.", accountId, couponId));
+        }
+
         Coupon coupon = couponRepository.findWithLockById(couponId);
         if (coupon == null) {
             throw new NotFoundException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",  couponId));
         }
 
-        coupon.issueCoupon(LocalDateTime.now());
-        UserCoupon userCoupon = UserCoupon.newInstance(couponId, workspaceId, couponGroup,
-            accountId);
+        coupon.issueCoupon();
+
+        UserCoupon userCoupon = UserCoupon.newInstance(couponId, workspaceId, couponGroup, accountId);
+
         userCouponRepository.save(userCoupon);
 
     }
