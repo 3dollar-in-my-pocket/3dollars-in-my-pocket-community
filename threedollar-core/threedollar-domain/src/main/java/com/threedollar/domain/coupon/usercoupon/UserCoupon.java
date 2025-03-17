@@ -3,7 +3,6 @@ package com.threedollar.domain.coupon.usercoupon;
 import com.threedollar.domain.BaseEntity;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponUsageStatus;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -64,7 +63,8 @@ public class UserCoupon extends BaseEntity {
             .build();
     }
 
-    public void useCoupon() {
+    public void use() {
         this.usedAt = LocalDateTime.now();
+        this.usageStatus = CouponUsageStatus.USED;
     }
 }
