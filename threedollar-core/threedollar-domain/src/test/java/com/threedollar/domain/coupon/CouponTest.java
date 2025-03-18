@@ -16,7 +16,7 @@ public class CouponTest {
         Coupon coupon = getCoupon();
 
         // when
-        coupon.issueCoupon(LocalDateTime.of(2025,3,9,1,1,1));
+        coupon.issueCoupon();
 
         // then
         assertThat(coupon.getCount()).isEqualTo(0);
@@ -27,11 +27,9 @@ public class CouponTest {
     void 유효하지_않은_쿠폰을_사용할_때_에러가_발생한다() {
         // given
         Coupon coupon = getCoupon();
-        // when
-        LocalDateTime useTime = LocalDateTime.of(2025,3,8,23,59,59);
 
         // when & then
-        assertThatThrownBy(() -> coupon.issueCoupon(useTime))
+        assertThatThrownBy(coupon::issueCoupon)
             .isInstanceOf(IllegalArgumentException.class);
 
     }
