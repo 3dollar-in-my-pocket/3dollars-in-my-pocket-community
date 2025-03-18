@@ -7,6 +7,7 @@ import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponTag;
 import com.threedollar.domain.coupon.CouponTime;
 import com.threedollar.domain.coupon.CouponType;
+import com.threedollar.domain.coupon.CouponUsageStatus;
 import com.threedollar.domain.coupon.repository.CouponRepository;
 import com.threedollar.domain.coupon.repository.UserCouponRepository;
 import com.threedollar.domain.coupon.usercoupon.UserCoupon;
@@ -43,7 +44,7 @@ public class UserCouponServiceTest extends IntegrationTest {
     void 유저가_쿠폰을_발급_받는다() {
         // given
         String workspaceId = "threedollar-test";
-        CouponGroup couponGroup = CouponGroup.EVENT;
+        CouponGroup couponGroup = CouponGroup.BOSS_STORE;
         String accountId = "USER1";
         Coupon coupon = getCoupon();
 
@@ -55,6 +56,35 @@ public class UserCouponServiceTest extends IntegrationTest {
         assertThat(userCoupons).hasSize(1);
         assertThat(userCoupons.get(0).getCouponId()).isEqualTo(coupon.getId());
         assertThat(userCoupons.get(0).getAccountId()).isEqualTo(accountId);
+
+        List<Coupon> coupons = couponRepository.findAll();
+        assertThat(coupons).hasSize(1);
+        assertThat(coupons.get(0).getCouponGroup()).isEqualTo(couponGroup);
+        assertThat(coupons.get(0).getCouponType()).isEqualTo(coupon.getCouponType());
+        assertThat(coupons.get(0).getCount()).isEqualTo(0);
+
+    }
+
+    @Test
+    void 유저가_쿠폰을_사용한다() {
+        // given
+        String workspaceId = "threedollar-test";
+        CouponGroup couponGroup = CouponGroup.BOSS_STORE;
+        String accountId = "USER1";
+        Coupon coupon = getCoupon();
+        UserCoupon userCoupon = UserCoupon.newInstance(coupon.getId(), workspaceId, couponGroup, accountId);
+        userCouponRepository.save(userCoupon);
+
+        // when
+        userCouponService.useCoupon(workspaceId, couponGroup, accountId, coupon.getId());
+
+        // then
+        List<UserCoupon> userCoupons = userCouponRepository.findAll();
+        assertThat(userCoupons).hasSize(1);
+        assertThat(userCoupons.get(0).getCouponGroup()).isEqualTo(couponGroup);
+        assertThat(userCoupons.get(0).getAccountId()).isEqualTo(accountId);
+        assertThat(userCoupons.get(0).getWorkspaceId()).isEqualTo(workspaceId);
+        assertThat(userCoupons.get(0).getUsageStatus()).isEqualTo(CouponUsageStatus.USED);
 
     }
 
@@ -69,7 +99,7 @@ public class UserCouponServiceTest extends IntegrationTest {
         String accountId = "1";
         CouponTime couponTime = new CouponTime(
             LocalDateTime.of(2025, 3,9,0,0,0),
-            LocalDateTime.of(2025, 3, 10, 0,0,0)
+            LocalDateTime.of(2099, 3, 20, 0,0,0)
         );
 
         Coupon coupon = Coupon.newInstance(workspaceId, targetId, name, couponType, couponTag,

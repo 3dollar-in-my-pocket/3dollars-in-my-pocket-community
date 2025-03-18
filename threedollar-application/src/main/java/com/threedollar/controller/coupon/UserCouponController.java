@@ -45,4 +45,16 @@ public class UserCouponController {
         userCouponService.issueCoupon(workspaceId.getWorkspaceId(), couponGroup, accountId, couponId);
         return ApiResponse.OK;
     }
+
+    @PostMapping("/v1/coupon-group/{couponGroup}/coupons/{couponId}/use")
+    @Operation(summary = "[사용자 쿠폰] 사용자가 쿠폰을 사용합니다")
+    public ApiResponse<String> useCoupon(@PathVariable CouponGroup couponGroup,
+        @PathVariable Long couponId,
+        @RequestApiKey ApiKeyContext workspaceId,
+        @RequestParam String accountId) {
+        userCouponService.useCoupon(workspaceId.getWorkspaceId(), couponGroup, accountId, couponId);
+        return ApiResponse.OK;
+    }
+
+
 }
