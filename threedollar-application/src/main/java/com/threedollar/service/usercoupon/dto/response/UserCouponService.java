@@ -13,7 +13,6 @@ import com.threedollar.domain.coupon.usercoupon.UserCoupon;
 
 import com.threedollar.service.coupon.CouponServiceHelper;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -84,6 +83,25 @@ public class UserCouponService {
 
         userCouponRepository.save(userCoupon);
 
+    }
+
+    @Transactional
+    public void useCoupon(String workspaceId, CouponGroup couponGroup, String accountId, Long couponId) {
+
+        UserCoupon userCoupon = userCouponRepository.findByWorkspaceIdAndCouponGroupAndCouponIdAndAccountId(
+            workspaceId, couponGroup, couponId, accountId
+        );
+
+        if (userCoupon == null) {
+            throw new NotFoundException(String.format("유저(%s) 가 발급 받은 쿠폰 (%s) 이 존재하지 않습니다.", accountId, couponId));
+        }
+
+        Coupon coupon = couponRepository.findWithLockById(couponId);
+        if (coupon == null) {
+            throw new NotFoundException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",  couponId));
+        }
+
+        userCoupon.use();
     }
 
 

@@ -2,3 +2,15 @@
 GET {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons?accountId=USER222&couponUsageStatus=UNUSED&size=3
 X-Community-Api-Key: {{api_key}}
 Content-Type: application/json
+
+
+### 유저가 쿠폰을 발급 받습니다.
+POST {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons/10?accountId=USER222
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+
+### 유저가 쿠폰을 사용합니다.
+POST {{host_api}}/community/v1/coupon-group/ADVERTISEMENT_COUPON/coupons/10/use?accountId=USER222
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+
