@@ -38,11 +38,18 @@ spring:
         format_sql: true
         use_sql_comments: true
   datasource:
-    url: jdbc:mariadb://localhost:23306/community_local
-    username: root
-    password: community
-    hikari:
-      maximum-pool-size: 10
+    master:
+      jdbc-url: jdbc:mariadb://localhost:23306/community_local
+      username: root
+      password: community
+      hikari:
+        maximum-pool-size: 10
+    slave:
+      jdbc-url: jdbc:mariadb://localhost:23307/community_local
+      username: root
+      password: community
+      hikari:
+        maximum-pool-size: 10
   data:
     redis:
       host: localhost
@@ -64,11 +71,18 @@ spring:
         format_sql: true
         use_sql_comments: true
   datasource:
-    url: jdbc:mariadb://localhost:33306/community_test
-    username: root
-    password: community
-    hikari:
-      maximum-pool-size: 10
+    master:
+      jdbc-url: jdbc:mariadb://localhost:33306/community_test
+      username: root
+      password: community
+      hikari:
+        maximum-pool-size: 10
+    slave:
+      jdbc-url: jdbc:mariadb://localhost:33306/community_test
+      username: root
+      password: community
+      hikari:
+        maximum-pool-size: 10
   data:
     redis:
       host: localhost
@@ -82,11 +96,18 @@ spring.config:
       - prod
 spring:
   datasource:
-    url: ${secret.jdbc.uri}
-    username: ${secret.jdbc.username}
-    password: ${secret.jdbc.password}
-    hikari:
-      maximum-pool-size: ${jdbc.connection-pool-size:10}
+    master:
+      url: ${secret.jdbc.uri}
+      username: ${secret.jdbc.username}
+      password: ${secret.jdbc.password}
+      hikari:
+        maximum-pool-size: ${jdbc.connection-pool-size:10}
+    slave:
+      url: ${secret.jdbc.uri}
+      username: ${secret.jdbc.username}
+      password: ${secret.jdbc.password}
+      hikari:
+        maximum-pool-size: ${jdbc.connection-pool-size:10}
   data:
     redis:
       host: ${secret.redis.host}
