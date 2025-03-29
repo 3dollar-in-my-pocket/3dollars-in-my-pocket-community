@@ -1,16 +1,39 @@
 services:
-  threedollar-mariadb-master:
+  mariadb-master:
     container_name: community-mariadb-local
     image: docker.io/bitnami/mariadb:10.9
     ports:
       - '23306:3306'
     volumes:
-      - community-local-mariadb-volume:/bitnami/mariadb
+      - community-local-mariadb-master1-volume:/bitnami/mariadb
     restart: unless-stopped
     environment:
-      - MARIADB_DATABASE=community_local
+      - MARIADB_REPLICATION_MODE=master
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=repl_password
       - MARIADB_ROOT_PASSWORD=community
-      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_DATABASE=community_local
+    networks:
+      - community-local-network
+
+  mariadb-slave:
+    container_name: community-mariadb-local-slave
+    image: docker.io/bitnami/mariadb:10.9
+    ports:
+      - '23307:3306'
+    volumes:
+      - community-local-mariadb-slave1-volume:/bitnami/mariadb
+    restart: unless-stopped
+    depends_on:
+      - mariadb-master
+    environment:
+      - MARIADB_REPLICATION_MODE=slave
+      - MARIADB_REPLICATION_USER=repl_user
+      - MARIADB_REPLICATION_PASSWORD=repl_password
+      - MARIADB_MASTER_HOST=mariadb-master
+      - MARIADB_MASTER_PORT_NUMBER=3306
+      - MARIADB_MASTER_ROOT_PASSWORD=community
+      - MARIADB_DATABASE=community_local
     networks:
       - community-local-network
 
@@ -27,7 +50,9 @@ services:
       - community-local-network
 
 volumes:
-  community-local-mariadb-volume:
+  community-local-mariadb-master1-volume:
+    driver: local
+  community-local-mariadb-slave1-volume:
     driver: local
   community-local-redis-volume:
     driver: local

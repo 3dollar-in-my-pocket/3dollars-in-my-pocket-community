@@ -1,5 +1,5 @@
 ### Health Liveness
-GET {{host_api}}/community/v1/health/liveness
+GET {{host_api}}/community/health/liveness
 
 ### Readiness Liveness
-GET {{host_api}}/community/v1/health/readiness
+GET {{host_api}}/community/health/readiness
