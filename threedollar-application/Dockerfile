@@ -24,12 +24,12 @@ COPY --from=build /app/threedollar-application/build/libs/threedollar-applicatio
 COPY --from=pinpoint /app/pinpoint-agent /app/pinpoint-agent
 
 ENV PINPOINT_VERSION=2.5.4
-ENV JAVA_TOOL_OPTIONS="-javaagent:/app/pinpoint-agent/pinpoint-agent-${PINPOINT_VERSION}/pinpoint-bootstrap-${PINPOINT_VERSION}.jar \
-                       -Dpinpoint.applicationName=COMMUNITY-API-${PROFILE} \
-                       -Dprofiler.sampling.type=COUNTING \
-                       -Dprofiler.sampling.counting.sampling-rate=1 \
-                       -Dprofiler.tomcat.excludeurl=/*/health/liveness,/*/health/readiness \
-                       -Dprofiler.transport.grpc.collector.ip=${COLLECTOR_IP:-127.0.0.1}"
+#ENV JAVA_TOOL_OPTIONS="-javaagent:/app/pinpoint-agent/pinpoint-agent-${PINPOINT_VERSION}/pinpoint-bootstrap-${PINPOINT_VERSION}.jar \
+#                       -Dpinpoint.applicationName=COMMUNITY-API-${PROFILE} \
+#                       -Dprofiler.sampling.type=COUNTING \
+#                       -Dprofiler.sampling.counting.sampling-rate=1 \
+#                       -Dprofiler.tomcat.excludeurl=/*/health/liveness,/*/health/readiness \
+#                       -Dprofiler.transport.grpc.collector.ip=${COLLECTOR_IP:-127.0.0.1}"
 
 ENTRYPOINT ["java", "-Duser.timezone=Asia/Seoul", "-jar", "/app.jar"]
 
