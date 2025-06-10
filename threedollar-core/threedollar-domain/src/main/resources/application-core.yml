@@ -97,13 +97,13 @@ spring.config:
 spring:
   datasource:
     master:
-      url: ${secret.jdbc.uri}
+      jdbc-url: ${secret.jdbc.uri}
       username: ${secret.jdbc.username}
       password: ${secret.jdbc.password}
       hikari:
         maximum-pool-size: ${jdbc.connection-pool-size:10}
     slave:
-      url: ${secret.jdbc.uri}
+      jdbc-url: ${secret.jdbc.uri}
       username: ${secret.jdbc.username}
       password: ${secret.jdbc.password}
       hikari:
