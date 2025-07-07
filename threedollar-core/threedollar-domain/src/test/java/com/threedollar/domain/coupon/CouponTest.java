@@ -19,7 +19,7 @@ class CouponTest {
         coupon.issueCoupon();
 
         // then
-        assertThat(coupon.getCount()).isEqualTo(0);
+        assertThat(coupon.getLimitCount()).isEqualTo(0);
 
     }
 
@@ -36,45 +36,60 @@ class CouponTest {
 
     private Coupon getValidCoupon() {
         String workspaceId = "threedollar-test";
-        String targetId = "USER1";
+        String providerId = "STORE-1";
+        String creatorId = "USER2";
         String name = "테스트 쿠폰";
-        CouponType couponType = CouponType.LIMITED;
         CouponTag couponTag = CouponTag.BOSS_EVENT;
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
-        Long count = 1L;
-        String accountId = "1";
+        Long maxCount = 1L;
+
+        LocalDateTime issueStartTime = LocalDateTime.of(2025, 3,9,0,0,0);
+        LocalDateTime issueEndTime = LocalDateTime.of(2025, 6, 25, 0, 0, 0);
+        LocalDateTime availableStartTime = LocalDateTime.of(2025, 6, 20, 0, 0, 0);
+        LocalDateTime availableEndTime = LocalDateTime.of(2025, 6, 30, 0, 0, 0);
+
+
         CouponTime couponTime = new CouponTime(
-            LocalDateTime.of(2025, 3,9,0,0,0),
-            LocalDateTime.of(2099, 3, 10, 0,0,0)
+            issueStartTime,
+            issueEndTime,
+            availableStartTime,
+            availableEndTime
         );
 
-        return Coupon.newInstance(workspaceId, targetId, name, couponType, couponTag,
+
+        return Coupon.newInstance(workspaceId, providerId, creatorId, name, couponTag,
             couponGroup,
-            count,
-            couponTime,
-            accountId);
+            maxCount,
+            couponTime);
 
     }
 
     private Coupon getInvalidCoupon() {
         String workspaceId = "threedollar-test";
-        String targetId = "USER1";
+        String providerId = "STORE-1";
+        String creatorId = "USER2";
         String name = "테스트 쿠폰";
-        CouponType couponType = CouponType.LIMITED;
         CouponTag couponTag = CouponTag.BOSS_EVENT;
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
         Long count = 1L;
         String accountId = "1";
+
+
+        LocalDateTime issueStartTime = LocalDateTime.of(2025, 3,9,0,0,0);
+        LocalDateTime issueEndTime = LocalDateTime.of(2025, 6, 25, 0, 0, 0);
+        LocalDateTime availableStartTime = LocalDateTime.of(2025, 6, 20, 0, 0, 0);
+        LocalDateTime availableEndTime = LocalDateTime.of(2025, 6, 30, 0, 0, 0);
+
+
         CouponTime couponTime = new CouponTime(
-            LocalDateTime.of(2025, 3,9,0,0,0),
-            LocalDateTime.of(2025, 3, 10, 0,0,0)
+            issueStartTime,
+            issueEndTime,
+            availableStartTime,
+            availableEndTime
+
         );
 
-        return Coupon.newInstance(workspaceId, targetId, name, couponType, couponTag,
-            couponGroup,
-            count,
-            couponTime,
-            accountId);
-
+        return Coupon.newInstance(workspaceId, providerId, creatorId, name, couponTag,
+            couponGroup, count, couponTime);
     }
 }

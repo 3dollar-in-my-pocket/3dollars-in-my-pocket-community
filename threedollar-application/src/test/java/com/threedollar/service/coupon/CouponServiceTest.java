@@ -8,7 +8,6 @@ import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponTag;
 import com.threedollar.domain.coupon.CouponTime;
-import com.threedollar.domain.coupon.CouponType;
 import com.threedollar.domain.coupon.repository.CouponRepository;
 import com.threedollar.service.coupon.dto.request.AddCouponRequest;
 
@@ -36,35 +35,36 @@ public class CouponServiceTest extends IntegrationTest {
     @Test
     void 쿠폰을_추가합니다() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2025, 2, 5, 0, 0);
-        LocalDateTime endTime = LocalDateTime.of(2025, 2, 6, 1, 0);
-        CouponTime couponTime = new CouponTime(startTime, endTime);
+        LocalDateTime issueStartTime = LocalDateTime.of(2025, 2, 5, 0, 0);
+        LocalDateTime issueEndTime = LocalDateTime.of(2025, 2, 6, 1, 0);
+        LocalDateTime availableStartTime = LocalDateTime.of(2025, 6, 25, 0, 0);
+        LocalDateTime availableEndTime = LocalDateTime.of(2025, 6, 30, 1, 0);
+        CouponTime couponTime = new CouponTime(issueStartTime, issueEndTime, availableStartTime, availableEndTime);
         String name = "쿠폰 이름";
-        CouponType couponType = CouponType.LIMITED;
         CouponTag couponTag = CouponTag.BOSS_EVENT;
-        Long count = 1L;
-        String accountId = "USER222";
+        Long limitCount = 1L;
+        String creatorId = "USER222";
+        String providerId = "store-1";
 
-        AddCouponRequest request = new AddCouponRequest(name, couponType, couponTag, couponTime, count, accountId);
+        AddCouponRequest request = new AddCouponRequest(name, couponTag, couponTime, providerId, creatorId,
+            limitCount);
+
         String workspaceId = "three-dollar-dev";
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
-        String targetId = "1";
 
         // when
-        couponService.addCoupon(workspaceId, couponGroup, targetId, request);
+        couponService.addCoupon(workspaceId, couponGroup, providerId, request);
 
         // then
         List<Coupon> couponList = couponRepository.findAll();
         assertThat(couponList).hasSize(1);
         assertThat(couponList.get(0).getName()).isEqualTo(name);
-        assertThat(couponList.get(0).getCouponType()).isEqualTo(couponType);
         assertThat(couponList.get(0).getCouponTag()).isEqualTo(couponTag);
-        assertThat(couponList.get(0).getCount()).isEqualTo(count);
-        assertThat(couponList.get(0).getAccountId()).isEqualTo(accountId);
+        assertThat(couponList.get(0).getLimitCount()).isEqualTo(limitCount);
         assertThat(couponList.get(0).getWorkspaceId()).isEqualTo(workspaceId);
-        assertThat(couponList.get(0).getTargetId()).isEqualTo(targetId);
-        assertEquals(couponList.get(0).getCouponTime().getStartTime(), startTime);
-        assertEquals(couponList.get(0).getCouponTime().getEndTime(), endTime);
+        assertThat(couponList.get(0).getProviderId()).isEqualTo(providerId);
+        assertEquals(couponList.get(0).getCouponTime().getIssueStartTime(), issueStartTime);
+        assertEquals(couponList.get(0).getCouponTime().getIssueEndTime(), issueEndTime);
 
     }
 

@@ -21,9 +21,9 @@ public class CouponService {
 
     @Transactional(readOnly = true)
     public CouponAndCursorResponse getCoupons(String workspaceId, CouponGroup couponGroup,
-        String targetId, int size) {
+        String providerId, String creatorId, int size) {
         List<CouponResponse> couponList = couponRepository.findByCouponInfoAndSize(
-            workspaceId, couponGroup, targetId, size + 1)
+            workspaceId, couponGroup, providerId, creatorId, size + 1)
             .stream().map(CouponResponse::of).toList();
 
         if (couponList.isEmpty() || couponList.size() <= size) {
@@ -34,9 +34,9 @@ public class CouponService {
 
 
     @Transactional
-    public void addCoupon(String workspaceId, CouponGroup couponGroup, String targetId,
+    public void addCoupon(String workspaceId, CouponGroup couponGroup, String creatorId,
         AddCouponRequest request) {
-        Coupon coupon = request.toEntity(workspaceId, couponGroup, targetId);
+        Coupon coupon = request.toEntity(workspaceId, request.getProviderId(), creatorId, couponGroup);
         couponRepository.save(coupon);
     }
 

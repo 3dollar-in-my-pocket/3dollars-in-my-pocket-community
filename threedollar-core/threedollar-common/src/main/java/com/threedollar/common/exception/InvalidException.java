@@ -8,4 +8,8 @@ public class InvalidException extends BaseException {
     public InvalidException(String message) {
         super(message, DEFAULT_ERROR_CODE);
     }
+
+    public InvalidException(ErrorCode errorCode) {
+        super(errorCode.getMessage(), errorCode);
+    }
 }

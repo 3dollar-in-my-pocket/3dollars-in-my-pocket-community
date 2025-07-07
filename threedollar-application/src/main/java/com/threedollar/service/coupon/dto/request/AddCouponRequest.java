@@ -4,7 +4,6 @@ import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponTag;
 import com.threedollar.domain.coupon.CouponTime;
-import com.threedollar.domain.coupon.CouponType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,38 +18,29 @@ public class AddCouponRequest {
     private String name;
 
     @NotNull
-    private CouponType couponType;
-
-    @NotNull
     private CouponTag couponTag;
 
     private CouponTime couponTime;
 
+    private String providerId;
+
+    private String creatorId;
+
     @Nullable
-    private Long count;
+    private Long limitCount;
 
-    @NotBlank
-    private String accountId;
-
-    public AddCouponRequest(String name, CouponType couponType, CouponTag couponTag,
-        CouponTime couponTime, @Nullable Long count, String accountId) {
+    public AddCouponRequest(String name, CouponTag couponTag, CouponTime couponTime,
+        String providerId, String creatorId, @Nullable Long limitCount) {
         this.name = name;
-        this.couponType = couponType;
         this.couponTag = couponTag;
         this.couponTime = couponTime;
-        this.count = count;
-        this.accountId = accountId;
+        this.providerId = providerId;
+        this.creatorId = creatorId;
+        this.limitCount = limitCount;
     }
 
-    public Coupon toEntity(String workspaceId, CouponGroup couponGroup, String targetId) {
-        return Coupon.newInstance(workspaceId, targetId, name, couponType, couponTag,
-            couponGroup, getCouponCount(couponType, count), couponTime, accountId);
-    }
-
-    private Long getCouponCount(CouponType couponType, @Nullable Long count) {
-        if (couponType == CouponType.UNLIMITED || count == null) {
-            return null;
-        }
-        return count;
+    public Coupon toEntity(String workspaceId, String providerId, String creatorId, CouponGroup couponGroup) {
+        return Coupon.newInstance(workspaceId, providerId, creatorId, name, couponTag,
+            couponGroup, limitCount, couponTime);
     }
 }
