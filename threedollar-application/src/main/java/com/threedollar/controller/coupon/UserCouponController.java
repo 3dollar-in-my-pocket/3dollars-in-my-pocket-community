@@ -3,6 +3,7 @@ package com.threedollar.controller.coupon;
 import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
+import com.threedollar.controller.coupon.dto.request.IssueCouponRequest;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponUsageStatus;
 import com.threedollar.service.usercoupon.dto.response.UserCouponAndCursorResponse;
@@ -10,10 +11,12 @@ import com.threedollar.service.usercoupon.dto.response.UserCouponService;
 
 import io.swagger.v3.oas.annotations.Operation;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,9 +43,8 @@ public class UserCouponController {
     @Operation(summary = "[사용자 쿠폰] 사용자가 쿠폰을 발급 받습니다.")
     public ApiResponse<String> issueCoupon(@PathVariable CouponGroup couponGroup,
     @PathVariable Long couponId,
-    @RequestApiKey ApiKeyContext workspaceId,
-    @RequestParam String accountId) {
-        userCouponService.issueCoupon(workspaceId.getWorkspaceId(), couponGroup, accountId, couponId);
+    @RequestApiKey ApiKeyContext workspaceId, @Valid @RequestBody IssueCouponRequest request) {
+        userCouponService.issueCoupon(workspaceId.getWorkspaceId(), couponGroup, couponId, request);
         return ApiResponse.OK;
     }
 

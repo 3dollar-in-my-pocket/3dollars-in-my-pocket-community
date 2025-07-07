@@ -3,6 +3,7 @@ package com.threedollar.service.usercoupon.dto.response;
 import com.threedollar.common.dto.response.CursorResponse;
 import com.threedollar.common.exception.InvalidException;
 import com.threedollar.common.exception.NotFoundException;
+import com.threedollar.controller.coupon.dto.request.IssueCouponRequest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponUsageStatus;
@@ -13,6 +14,7 @@ import com.threedollar.domain.coupon.usercoupon.UserCoupon;
 
 import com.threedollar.service.coupon.CouponServiceHelper;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,22 +66,26 @@ public class UserCouponService {
     }
 
     @Transactional
-    public void issueCoupon(String workspaceId, CouponGroup couponGroup, String accountId, Long couponId) {
+    public void issueCoupon(String workspaceId, CouponGroup couponGroup, Long couponId, IssueCouponRequest request) {
         boolean existsCoupon = userCouponRepository.existsByWorkspaceIdAndCouponGroupAndCouponIdAndAccountId(
-            workspaceId, couponGroup, couponId, accountId
+            workspaceId, couponGroup, couponId, request.getAccountId()
         );
         if (existsCoupon) {
-            throw new InvalidException(String.format("유저(%s) 가 발급 받은 쿠폰 (%s) 이 이미 존재합니다.", accountId, couponId));
+            throw new InvalidException(String.format("유저(%s) 가 발급 받은 쿠폰 (%s) 이 이미 존재합니다.",
+                request.getAccountId(), couponId));
         }
 
         Coupon coupon = couponRepository.findWithLockById(couponId);
         if (coupon == null) {
-            throw new NotFoundException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",  couponId));
+            throw new NotFoundException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",
+                couponId));
         }
 
         coupon.issueCoupon();
 
-        UserCoupon userCoupon = UserCoupon.newInstance(couponId, workspaceId, couponGroup, accountId);
+        UserCoupon userCoupon = UserCoupon.newInstance(couponId, workspaceId,
+            couponGroup, request.getAccountId(), request.getIssuedAt(),
+            request.getValidPeriodStart(), request.getValidPeriodEnd());
 
         userCouponRepository.save(userCoupon);
 
