@@ -1,5 +1,7 @@
 package com.threedollar.domain.coupon;
 
+import com.threedollar.common.exception.ErrorCode;
+import com.threedollar.common.exception.InvalidException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -14,20 +16,30 @@ import lombok.NoArgsConstructor;
 public class CouponTime {
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalDateTime issueStartTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalDateTime issueEndTime;
 
-    public CouponTime(LocalDateTime startTime, LocalDateTime endTime) {
-        validateCouponTime(startTime, endTime);
-        this.startTime = startTime;
-        this.endTime = endTime;
+    @Column(nullable = false)
+    private LocalDateTime availableStartTime;
+
+    @Column(nullable = false)
+    private LocalDateTime availableEndTime;
+
+    public CouponTime(LocalDateTime issueStartTime, LocalDateTime issueEndTime, LocalDateTime availableStartTime,
+        LocalDateTime availableEndTime) {
+        validateCouponTime(issueStartTime, issueEndTime, ErrorCode.E400_INVALID_COUPON_ISSUE_PERIOD);
+        validateCouponTime(availableStartTime, availableEndTime, ErrorCode.E400_INVALID_COUPON_AVAILABLE_PERIOD);
+        this.issueStartTime = issueStartTime;
+        this.issueEndTime = issueEndTime;
+        this.availableStartTime = availableStartTime;
+        this.availableEndTime = availableEndTime;
     }
 
-    private void validateCouponTime(LocalDateTime startTime, LocalDateTime endTime) {
+    public static void validateCouponTime(LocalDateTime startTime, LocalDateTime endTime, ErrorCode errorCode) {
         if (startTime.isAfter(endTime)) {
-            throw new IllegalArgumentException("startTime is after endTime");
+            throw new InvalidException(errorCode);
         }
     }
 }

@@ -9,6 +9,6 @@ import java.util.List;
 public interface CouponRepositoryCustom {
 
     List<Coupon> findByCouponInfoAndSize(String workspaceId, CouponGroup couponGroup,
-        String targetId, int size);
+        String providerId, String creatorId, int size);
 
 }

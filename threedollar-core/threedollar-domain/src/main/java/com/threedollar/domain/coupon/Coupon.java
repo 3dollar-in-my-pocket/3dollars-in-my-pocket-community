@@ -1,13 +1,12 @@
 package com.threedollar.domain.coupon;
 
+import com.threedollar.common.exception.ErrorCode;
 import com.threedollar.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-
-import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,14 +22,13 @@ public class Coupon extends BaseEntity {
     private String workspaceId;
 
     @Column(nullable = false)
-    private String targetId;
+    private String providerId; // 발급한 가게 Id
+
+    @Column(nullable = false)
+    private String creatorId; // 쿠폰 등록자 Id
 
     @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CouponType couponType;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -45,41 +43,41 @@ public class Coupon extends BaseEntity {
     private CouponTag couponTag;
 
     @Column(nullable = false)
-    private Long count;
+    private Long limitCount;
 
     @Embedded
     private CouponTime couponTime;
 
-    @Column(nullable = false)
-    private String accountId;
+    @Column(length = 1000)
+    private String description;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Coupon(String workspaceId, String targetId, String name, CouponType couponType,
-        CouponTag couponTag, CouponStatus status, CouponGroup couponGroup, CouponTime couponTime, Long count, String accountId) {
+    public Coupon(String workspaceId, String providerId, String creatorId, String name,
+        CouponTag couponTag, CouponStatus status, CouponGroup couponGroup,
+        CouponTime couponTime, Long limitCount, String description) {
         this.workspaceId = workspaceId;
-        this.targetId = targetId;
+        this.providerId = providerId;
+        this.creatorId = creatorId;
         this.name = name;
         this.couponTag = couponTag;
-        this.couponType = couponType;
         this.status = status;
         this.couponGroup = couponGroup;
-        this.count = count;
+        this.limitCount = limitCount;
         this.couponTime = couponTime;
-        this.accountId = accountId;
+        this.description = description;
     }
 
-    public static Coupon newInstance(String workspaceId, String targetId, String name,
-        CouponType couponType, CouponTag couponTag, CouponGroup couponGroup, Long count,
-        CouponTime couponTime, String accountId) {
+    public static Coupon newInstance(String workspaceId, String providerId, String creatorId,
+        String name, CouponTag couponTag, CouponGroup couponGroup,
+        Long limitCount, CouponTime couponTime) {
         return Coupon.builder()
-            .couponType(couponType)
             .workspaceId(workspaceId)
-            .targetId(targetId)
+            .providerId(providerId)
+            .creatorId(creatorId)
             .name(name)
             .couponTag(couponTag)
             .couponTime(couponTime)
-            .accountId(accountId)
-            .count(count)
+            .limitCount(limitCount)
             .couponGroup(couponGroup)
             .status(CouponStatus.ACTIVE)
             .build();
@@ -87,15 +85,12 @@ public class Coupon extends BaseEntity {
 
     public void issueCoupon() {
         // Validate time
-        if (LocalDateTime.now().isBefore(couponTime.getStartTime()) || LocalDateTime.now().isAfter(couponTime.getEndTime())) {
-            throw new IllegalArgumentException("쿠폰 발급 가능한 시간이 아닙니다.");
+        CouponTime.validateCouponTime(couponTime.getIssueStartTime(), couponTime.getIssueEndTime(),
+            ErrorCode.E400_INVALID_COUPON_ISSUE_PERIOD);
+        if (this.limitCount == null || this.limitCount == 0) {
+            throw new IllegalArgumentException("쿠폰의 재고가 부족합니다.");
         }
-        if (this.couponType.equals(CouponType.LIMITED)) {
-            if (this.count <= 0) {
-                throw new IllegalArgumentException("쿠폰의 재고가 부족합니다.");
-            }
-            this.count -= 1;
-        }
+        this.limitCount -= 1; // 쿠폰 발급 시 재고 감소
     }
 
 }
