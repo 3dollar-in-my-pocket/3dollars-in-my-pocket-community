@@ -9,7 +9,7 @@ buildscript {
         findBugsJsr305Version = "3.0.2"
 
         // Sentry
-        sentryVersion = "8.16.0"
+        sentryVersion = "8.17.0"
     }
 }
 
