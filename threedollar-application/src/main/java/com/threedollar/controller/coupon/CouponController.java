@@ -24,14 +24,14 @@ public class CouponController {
 
     private final CouponService couponService;
 
-    @GetMapping("/v1/coupon-group/{couponGroup}/provider/{providerId}/creator/{creatorId}")
+    @GetMapping("/v1/coupon-group/{couponGroup}/provider/{providerId}")
     @Operation(summary = "[쿠폰] 사장님(유저)이 발급한 쿠폰들을 조회합니다.")
     public ApiResponse<CouponAndCursorResponse> couponAndCursorResponseApiResponse(
         @RequestApiKey ApiKeyContext workspaceId,
         @PathVariable CouponGroup couponGroup,
         @PathVariable String providerId,
-        @PathVariable String creatorId,
-        @RequestParam(defaultValue = "20", required = false) Integer size) {
+        @RequestParam(defaultValue = "20", required = false) Integer size,
+        @RequestParam(required = false) String creatorId) {
         return ApiResponse.success(couponService.getCoupons(workspaceId.getWorkspaceId(), couponGroup,
             providerId, creatorId, size));
 

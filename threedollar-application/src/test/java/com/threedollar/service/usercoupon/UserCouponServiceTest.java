@@ -2,7 +2,6 @@ package com.threedollar.service.usercoupon;
 
 
 import com.threedollar.IntegrationTest;
-import com.threedollar.controller.coupon.dto.request.IssueCouponRequest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponTag;
@@ -47,15 +46,9 @@ public class UserCouponServiceTest extends IntegrationTest {
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
         String accountId = "USER1";
         Coupon coupon = getCoupon();
-        IssueCouponRequest request = new IssueCouponRequest(
-            accountId,
-            LocalDateTime.now(),
-            coupon.getCouponTime().getAvailableStartTime(),
-            coupon.getCouponTime().getAvailableEndTime()
-        );
 
         // when
-        userCouponService.issueCoupon(workspaceId, couponGroup, coupon.getId(), request);
+        userCouponService.issueCoupon(workspaceId, couponGroup, coupon.getId(), accountId);
 
         // then
         List<UserCoupon> userCoupons = userCouponRepository.findAll();
@@ -78,12 +71,9 @@ public class UserCouponServiceTest extends IntegrationTest {
         String accountId = "USER1";
         Coupon coupon = getCoupon();
 
-        LocalDateTime issuedAt = LocalDateTime.now();
-        LocalDateTime validPeriodStart = LocalDateTime.now().minusDays(1);
-        LocalDateTime validPeriodEnd = LocalDateTime.now().plusDays(2);
 
         UserCoupon userCoupon = UserCoupon.newInstance(coupon.getId(), workspaceId, couponGroup,
-            accountId, issuedAt, validPeriodStart, validPeriodEnd);
+            accountId, coupon.getCouponTime().getAvailableStartTime(), coupon.getCouponTime().getAvailableEndTime());
         userCouponRepository.save(userCoupon);
 
         // when

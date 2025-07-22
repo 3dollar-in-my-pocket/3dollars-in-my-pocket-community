@@ -6,6 +6,7 @@ import com.threedollar.domain.coupon.CouponTag;
 import com.threedollar.domain.coupon.CouponTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
@@ -27,10 +28,11 @@ public class AddCouponRequest {
     private String creatorId;
 
     @Nullable
+    @PositiveOrZero
     private Long limitCount;
 
     public AddCouponRequest(String name, CouponTag couponTag, CouponTime couponTime,
-        String providerId, String creatorId, @Nullable Long limitCount) {
+        String providerId, String creatorId, @Nullable @PositiveOrZero Long limitCount) {
         this.name = name;
         this.couponTag = couponTag;
         this.couponTime = couponTime;

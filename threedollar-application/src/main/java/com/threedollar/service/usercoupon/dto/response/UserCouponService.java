@@ -3,7 +3,6 @@ package com.threedollar.service.usercoupon.dto.response;
 import com.threedollar.common.dto.response.CursorResponse;
 import com.threedollar.common.exception.InvalidException;
 import com.threedollar.common.exception.NotFoundException;
-import com.threedollar.controller.coupon.dto.request.IssueCouponRequest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponUsageStatus;
@@ -66,13 +65,13 @@ public class UserCouponService {
     }
 
     @Transactional
-    public void issueCoupon(String workspaceId, CouponGroup couponGroup, Long couponId, IssueCouponRequest request) {
+    public void issueCoupon(String workspaceId, CouponGroup couponGroup, Long couponId, String accountId) {
         boolean existsCoupon = userCouponRepository.existsByWorkspaceIdAndCouponGroupAndCouponIdAndAccountId(
-            workspaceId, couponGroup, couponId, request.getAccountId()
+            workspaceId, couponGroup, couponId, accountId
         );
         if (existsCoupon) {
             throw new InvalidException(String.format("유저(%s) 가 발급 받은 쿠폰 (%s) 이 이미 존재합니다.",
-                request.getAccountId(), couponId));
+                accountId, couponId));
         }
 
         Coupon coupon = couponRepository.findWithLockById(couponId);
@@ -84,8 +83,8 @@ public class UserCouponService {
         coupon.issueCoupon();
 
         UserCoupon userCoupon = UserCoupon.newInstance(couponId, workspaceId,
-            couponGroup, request.getAccountId(), request.getIssuedAt(),
-            request.getValidPeriodStart(), request.getValidPeriodEnd());
+            couponGroup, accountId, coupon.getCouponTime().getAvailableStartTime(),
+            coupon.getCouponTime().getAvailableEndTime());
 
         userCouponRepository.save(userCoupon);
 
@@ -107,7 +106,7 @@ public class UserCouponService {
             throw new NotFoundException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",  couponId));
         }
 
-        userCoupon.use();
+        userCoupon.use(LocalDateTime.now());
     }
 
 

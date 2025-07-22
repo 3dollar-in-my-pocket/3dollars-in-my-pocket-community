@@ -70,7 +70,7 @@ public class UserCoupon extends BaseEntity {
     }
 
     public static UserCoupon newInstance(@NotNull Long couponId, @NotBlank String workspaceId,
-        @NotNull CouponGroup couponGroup, @NotBlank String accountId, LocalDateTime issuedAt,
+        @NotNull CouponGroup couponGroup, @NotBlank String accountId,
         LocalDateTime validPeriodStart, LocalDateTime validPeriodEnd) {
         return UserCoupon.builder()
             .couponId(couponId)
@@ -78,17 +78,17 @@ public class UserCoupon extends BaseEntity {
             .workspaceId(workspaceId)
             .couponGroup(couponGroup)
             .usageStatus(CouponUsageStatus.UNUSED)
-            .issuedAt(issuedAt)
+            .issuedAt(LocalDateTime.now())
             .validPeriodStart(validPeriodStart)
             .validPeriodEnd(validPeriodEnd)
             .build();
     }
 
-    public void use() {
+    public void use(LocalDateTime usedAt) {
         if (this.usageStatus != CouponUsageStatus.UNUSED) {
             throw new InvalidException("쿠폰은 이미 사용되었거나 만료되었습니다.");
         }
-        if (LocalDateTime.now().isBefore(this.validPeriodStart) || LocalDateTime.now().isAfter(this.validPeriodEnd)) {
+        if (usedAt.isBefore(this.validPeriodStart) || usedAt.isAfter(this.validPeriodEnd)) {
             throw new InvalidException("쿠폰 사용 기간이 아닙니다.");
         }
         this.usedAt = LocalDateTime.now();

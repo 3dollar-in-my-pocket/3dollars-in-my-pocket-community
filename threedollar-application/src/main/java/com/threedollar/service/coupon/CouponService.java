@@ -23,7 +23,7 @@ public class CouponService {
     public CouponAndCursorResponse getCoupons(String workspaceId, CouponGroup couponGroup,
         String providerId, String creatorId, int size) {
         List<CouponResponse> couponList = couponRepository.findByCouponInfoAndSize(
-            workspaceId, couponGroup, providerId, creatorId, size + 1)
+            workspaceId, couponGroup, providerId, creatorId,size + 1)
             .stream().map(CouponResponse::of).toList();
 
         if (couponList.isEmpty() || couponList.size() <= size) {
