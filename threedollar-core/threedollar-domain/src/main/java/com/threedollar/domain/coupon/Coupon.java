@@ -83,14 +83,12 @@ public class Coupon extends BaseEntity {
             .build();
     }
 
-    public void issueCoupon() {
+    public void validateCoupon() {
         // Validate time
         CouponTime.validateCouponTime(couponTime.getIssueStartTime(), couponTime.getIssueEndTime(),
             ErrorCode.E400_INVALID_COUPON_ISSUE_PERIOD);
-        if (this.limitCount == null || this.limitCount == 0) {
-            throw new IllegalArgumentException("쿠폰의 재고가 부족합니다.");
-        }
-        this.limitCount -= 1; // 쿠폰 발급 시 재고 감소
+
     }
+
 
 }
