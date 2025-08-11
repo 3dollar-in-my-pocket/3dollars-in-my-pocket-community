@@ -88,10 +88,13 @@ public class UserCouponService {
 
         // 쿠폰 발급 가능 여부 확인
         coupon.validateCoupon();
-        if (couponIssueCountRepository.getValueByKey(
-            CouponIssueCountKey.of(couponId, coupon.getWorkspaceId(), coupon.getProviderId())) >= coupon.getMaxCount()) {
-            throw new InvalidException(String.format("쿠폰 (%s) 의 발급 가능 개수(%s) 를 초과했습니다.",
-                couponId, coupon.getMaxCount()));
+
+        // 쿠폰 발급 가능 개수 확인
+        Long maxIssuableCouponCount = couponIssueCountRepository.getValueByKey(
+            CouponIssueCountKey.of(couponId, coupon.getWorkspaceId(), coupon.getProviderId()));
+        if (maxIssuableCouponCount >= coupon.getMaxCount()) {
+            throw new InvalidException(String.format("쿠폰 (%s) 의 발급 가능 개수(%s) 를 초과했습니다. (현재 발급 개수: %s)",
+                couponId, coupon.getMaxCount(), maxIssuableCouponCount));
         }
 
         // 고객이 쿠폰 발급

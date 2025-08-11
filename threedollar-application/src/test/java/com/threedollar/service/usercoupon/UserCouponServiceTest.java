@@ -59,7 +59,7 @@ public class UserCouponServiceTest extends IntegrationTest {
         List<Coupon> coupons = couponRepository.findAll();
         assertThat(coupons).hasSize(1);
         assertThat(coupons.get(0).getCouponGroup()).isEqualTo(couponGroup);
-        assertThat(coupons.get(0).getMaxCount()).isEqualTo(0);
+        assertThat(coupons.get(0).getMaxCount()).isEqualTo(coupon.getMaxCount());
 
     }
 
@@ -96,8 +96,8 @@ public class UserCouponServiceTest extends IntegrationTest {
         String name = "테스트 쿠폰";
         CouponTag couponTag = CouponTag.BOSS_EVENT;
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
-        Long count = 1L;
-        String accountId = "1";
+        Long maxCount = 100L;
+        String creatorId = "USER-2";
 
         LocalDateTime issueStartTime = LocalDateTime.of(2025, 3, 9, 0, 0, 0);
         LocalDateTime issueEndTime = LocalDateTime.now().plusDays(1);
@@ -110,9 +110,9 @@ public class UserCouponServiceTest extends IntegrationTest {
             availableEndTime
         );
 
-        Coupon coupon = Coupon.newInstance(workspaceId, providerId, accountId, name, couponTag,
+        Coupon coupon = Coupon.newInstance(workspaceId, providerId, creatorId, name, couponTag,
             couponGroup,
-            count,
+            maxCount,
             couponTime);
 
         return couponRepository.save(coupon);
