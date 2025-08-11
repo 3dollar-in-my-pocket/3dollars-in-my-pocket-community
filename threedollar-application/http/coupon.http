@@ -25,3 +25,20 @@ Content-Type: application/json
   "count": 3
 }
 
+### 사장님이 쿠폰을 생성합니다.
+POST {{host_api}}/community/v1/coupon-group/BOSS_STORE/provider/store-1
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+
+{
+    "name": "뽀미 쓰다듬기 1회 쿠폰",
+    "couponTag": "BOSS_EVENT",
+    "couponTime": {
+    "issueStartTime": "2025-08-09T11:59:16.805Z",
+    "issueEndTime": "2025-08-09T11:59:16.805Z",
+    "availableStartTime": "2025-08-09T11:59:16.805Z",
+    "availableEndTime": "2025-08-09T11:59:16.805Z"
+  },
+  "creatorId": "string",
+  "maxCount": 10
+}
