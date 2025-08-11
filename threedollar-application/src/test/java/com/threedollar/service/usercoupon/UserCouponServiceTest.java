@@ -59,7 +59,7 @@ public class UserCouponServiceTest extends IntegrationTest {
         List<Coupon> coupons = couponRepository.findAll();
         assertThat(coupons).hasSize(1);
         assertThat(coupons.get(0).getCouponGroup()).isEqualTo(couponGroup);
-        assertThat(coupons.get(0).getLimitCount()).isEqualTo(0);
+        assertThat(coupons.get(0).getMaxCount()).isEqualTo(0);
 
     }
 
