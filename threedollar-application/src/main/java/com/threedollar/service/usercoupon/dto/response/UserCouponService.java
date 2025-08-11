@@ -122,6 +122,10 @@ public class UserCouponService {
         }
 
         userCoupon.use(LocalDateTime.now());
+
+        // redis 기반 사용한 쿠폰 수 증가
+        usedCouponCountRepository.incrByCount(coupon.getId(), workspaceId, coupon.getProviderId());
+
     }
 
 
