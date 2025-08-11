@@ -23,26 +23,23 @@ public class AddCouponRequest {
 
     private CouponTime couponTime;
 
-    private String providerId;
-
     private String creatorId;
 
     @Nullable
     @PositiveOrZero
-    private Long limitCount;
+    private Long maxCount;
 
     public AddCouponRequest(String name, CouponTag couponTag, CouponTime couponTime,
-        String providerId, String creatorId, @Nullable @PositiveOrZero Long limitCount) {
+        String creatorId, @Nullable @PositiveOrZero Long maxCount) {
         this.name = name;
         this.couponTag = couponTag;
         this.couponTime = couponTime;
-        this.providerId = providerId;
         this.creatorId = creatorId;
-        this.limitCount = limitCount;
+        this.maxCount = maxCount;
     }
 
     public Coupon toEntity(String workspaceId, String providerId, String creatorId, CouponGroup couponGroup) {
         return Coupon.newInstance(workspaceId, providerId, creatorId, name, couponTag,
-            couponGroup, limitCount, couponTime);
+            couponGroup, maxCount, couponTime);
     }
 }
