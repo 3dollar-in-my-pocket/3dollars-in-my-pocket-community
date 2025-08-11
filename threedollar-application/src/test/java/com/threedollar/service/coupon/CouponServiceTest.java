@@ -42,12 +42,12 @@ public class CouponServiceTest extends IntegrationTest {
         CouponTime couponTime = new CouponTime(issueStartTime, issueEndTime, availableStartTime, availableEndTime);
         String name = "쿠폰 이름";
         CouponTag couponTag = CouponTag.BOSS_EVENT;
-        Long limitCount = 1L;
+        Long maxCount = 1L;
         String creatorId = "USER222";
         String providerId = "store-1";
 
-        AddCouponRequest request = new AddCouponRequest(name, couponTag, couponTime, providerId, creatorId,
-            limitCount);
+        AddCouponRequest request = new AddCouponRequest(name, couponTag, couponTime, creatorId,
+            maxCount);
 
         String workspaceId = "three-dollar-dev";
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
@@ -60,7 +60,7 @@ public class CouponServiceTest extends IntegrationTest {
         assertThat(couponList).hasSize(1);
         assertThat(couponList.get(0).getName()).isEqualTo(name);
         assertThat(couponList.get(0).getCouponTag()).isEqualTo(couponTag);
-        assertThat(couponList.get(0).getLimitCount()).isEqualTo(limitCount);
+        assertThat(couponList.get(0).getMaxCount()).isEqualTo(maxCount);
         assertThat(couponList.get(0).getWorkspaceId()).isEqualTo(workspaceId);
         assertThat(couponList.get(0).getProviderId()).isEqualTo(providerId);
         assertEquals(couponList.get(0).getCouponTime().getIssueStartTime(), issueStartTime);
