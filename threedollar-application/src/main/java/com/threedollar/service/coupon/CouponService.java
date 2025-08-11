@@ -40,7 +40,7 @@ public class CouponService {
     public void addCoupon(String workspaceId, CouponGroup couponGroup, String providerId,
         AddCouponRequest request) {
         // 쿠폰 생성
-        Coupon coupon = request.toEntity(workspaceId, request.getCreatorId(), providerId, couponGroup);
+        Coupon coupon = request.toEntity(workspaceId, providerId, request.getCreatorId(), couponGroup);
         couponRepository.save(coupon);
 
         // 발급한 쿠폰 수 증가
