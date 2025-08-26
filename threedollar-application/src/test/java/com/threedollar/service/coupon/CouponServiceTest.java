@@ -1,9 +1,11 @@
 package com.threedollar.service.coupon;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.threedollar.IntegrationTest;
+import com.threedollar.common.exception.ConflictException;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
 import com.threedollar.domain.coupon.CouponTag;
@@ -65,6 +67,41 @@ public class CouponServiceTest extends IntegrationTest {
         assertThat(couponList.get(0).getProviderId()).isEqualTo(providerId);
         assertEquals(couponList.get(0).getCouponTime().getIssueStartTime(), issueStartTime);
         assertEquals(couponList.get(0).getCouponTime().getIssueEndTime(), issueEndTime);
+
+    }
+
+    @Test
+    void 쿠폰이_5개_이상_생성되면_쿠폰을_생성할_수_없습니다() {
+        // given
+        LocalDateTime now = LocalDateTime.now();
+        String workspaceId = "three-dollar-dev";
+        String providerId = "store-1";
+        String creatorId = "USER222";
+        Long maxCount = 5L;
+        String name = "뽀미 쓰다듬기 쿠폰";
+        CouponTag couponTag = CouponTag.BOSS_EVENT;
+        CouponGroup couponGroup = CouponGroup.BOSS_STORE;
+
+        CouponTime couponTime = new CouponTime(now, now.plusDays(5), now, now.plusDays(5));
+        AddCouponRequest request = new AddCouponRequest(name, couponTag, couponTime, creatorId,
+            maxCount);
+
+
+        // 쿠폰 5개 생성
+        couponRepository.save(Coupon.newInstance(workspaceId, providerId, creatorId,
+            name, couponTag, couponGroup, maxCount, couponTime));
+        couponRepository.save(Coupon.newInstance(workspaceId, providerId, creatorId,
+            name, couponTag, couponGroup, maxCount, couponTime));
+        couponRepository.save(Coupon.newInstance(workspaceId, providerId, creatorId,
+            name, couponTag, couponGroup, maxCount, couponTime));
+        couponRepository.save(Coupon.newInstance(workspaceId, providerId, creatorId,
+            name, couponTag, couponGroup, maxCount, couponTime));
+        couponRepository.save(Coupon.newInstance(workspaceId, providerId, creatorId,
+            name, couponTag, couponGroup, maxCount, couponTime));
+
+        // when & then
+        assertThatThrownBy(() -> couponService.addCoupon(workspaceId, couponGroup, providerId, request))
+            .isInstanceOf(ConflictException.class);
 
     }
 
