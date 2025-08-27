@@ -49,4 +49,18 @@ public class CouponRepositoryCustomImpl implements CouponRepositoryCustom {
             ).fetch();
     }
 
+    @Override
+    public Coupon findValidCouponByCouponInfo(String workspaceId, CouponGroup couponGroup,
+        Long couponId, LocalDateTime now) {
+        return jpaQueryFactory.selectFrom(coupon)
+            .where(
+                coupon.workspaceId.eq(workspaceId),
+                coupon.couponGroup.eq(couponGroup),
+                coupon.id.eq(couponId),
+                coupon.couponTime.availableStartTime.loe(now)
+                    .and(coupon.couponTime.availableEndTime.gt(now)),
+                coupon.status.eq(CouponStatus.ACTIVE)
+            ).fetchOne();
+    }
+
 }

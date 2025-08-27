@@ -15,4 +15,8 @@ public interface CouponRepositoryCustom {
     List<Coupon> findValidCouponByProviderInfo(String workspaceId, CouponGroup couponGroup,
         String providerId, LocalDateTime now);
 
+    Coupon findValidCouponByCouponInfo(String workspaceId, CouponGroup couponGroup,
+        Long couponId, LocalDateTime now);
+
+
 }

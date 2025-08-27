@@ -1,7 +1,6 @@
 package com.threedollar.service.usercoupon.dto.response;
 
 import com.threedollar.common.dto.response.CursorResponse;
-import com.threedollar.common.exception.ConflictException;
 import com.threedollar.common.exception.InvalidException;
 import com.threedollar.common.exception.NotFoundException;
 import com.threedollar.domain.coupon.Coupon;
@@ -80,10 +79,11 @@ public class UserCouponService {
                 accountId, couponId));
         }
 
-        Coupon coupon = couponRepository.findWithLockById(couponId);
+        // 유효한 쿠폰인지 확인
+        Coupon coupon = couponRepository.findValidCouponByCouponInfo(workspaceId, couponGroup, couponId, LocalDateTime.now());
         if (coupon == null) {
-            throw new ConflictException(String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.",
-                couponId.toString()));
+            throw new NotFoundException(
+                String.format("쿠폰 (%s) 에 해당하는 couponId 가 존재하지 않습니다.", couponId));
         }
 
         // 쿠폰 발급 가능 여부 확인
