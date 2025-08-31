@@ -67,4 +67,31 @@ public class CouponService {
         couponIssueCountRepository.incrByCount(coupon.getId(), workspaceId, providerId);
     }
 
+    @Transactional
+    public List<CouponExistence> existsCouponByProvider(String workspaceId,
+        CouponGroup couponGroup,
+        Set<String> providerIds, LocalDateTime now) {
+        return providerIds.stream()
+            .map(providerId -> {
+                List<Coupon> coupons = couponRepository.findValidCouponByProviderInfo(
+                    workspaceId, couponGroup, providerId, now);
+                
+                if (coupons.isEmpty()) {
+                    return new CouponExistence(providerId, false);
+                }
+
+                long usedCount = coupons.stream()
+                    .mapToLong(coupon -> couponIssueCountRepository.getValueByKey(
+                        CouponIssueCountKey.of(coupon.getId(), workspaceId, providerId)))
+                    .sum();
+                // 발급할 수 있는 쿠폰이 있는지 확인
+                boolean exists = coupons.stream()
+                    .anyMatch(coupon -> coupon.getMaxCount() > usedCount);
+
+                return new CouponExistence(providerId, exists);
+            })
+            .toList();
+    }
+
+
 }

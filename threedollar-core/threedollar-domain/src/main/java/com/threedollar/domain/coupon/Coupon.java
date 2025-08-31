@@ -90,5 +90,8 @@ public class Coupon extends BaseEntity {
 
     }
 
+    public void disableIssuable() {
+        this.status = CouponStatus.ENDED;
+    }
 
 }

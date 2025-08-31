@@ -14,6 +14,7 @@ import com.threedollar.domain.coupon.repository.redis.couponissuecount.CouponIss
 import com.threedollar.domain.coupon.repository.redis.couponissuecount.CouponIssueCountRepository;
 import com.threedollar.domain.coupon.usercoupon.UserCoupon;
 
+import com.threedollar.service.coupon.CouponIssuanceService;
 import com.threedollar.service.coupon.CouponServiceHelper;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class UserCouponService {
 
     private final CouponServiceHelper couponServiceHelper;
     private final CouponRepository couponRepository;
+    private final CouponIssuanceService couponIssuanceService;
 
     @Transactional(readOnly = true)
     public UserCouponAndCursorResponse getUserCouponList(String workspaceId, CouponGroup couponGroup,
@@ -105,6 +107,9 @@ public class UserCouponService {
 
         // 발급한 쿠폰 개수 증가
         couponIssueCountRepository.incrByCount(coupon.getId(), coupon.getWorkspaceId(), coupon.getProviderId());
+
+        // 쿠폰이 발급 가능한 최대 수량에 도달했을떄, 발급 가능한 쿠폰이 없다는 컬럼 변경
+        couponIssuanceService.disableIssuanceCoupon(coupon);
 
     }
 

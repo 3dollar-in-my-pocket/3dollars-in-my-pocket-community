@@ -4,6 +4,7 @@ package com.threedollar.service.usercoupon;
 import com.threedollar.IntegrationTest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponGroup;
+import com.threedollar.domain.coupon.CouponStatus;
 import com.threedollar.domain.coupon.CouponTag;
 import com.threedollar.domain.coupon.CouponTime;
 import com.threedollar.domain.coupon.CouponUsageStatus;
@@ -44,7 +45,7 @@ public class UserCouponServiceTest extends IntegrationTest {
         // given
         String workspaceId = "threedollar-test";
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
-        String accountId = "USER1";
+        String accountId = "USER2";
         Coupon coupon = getCoupon();
 
         // when
@@ -60,6 +61,9 @@ public class UserCouponServiceTest extends IntegrationTest {
         assertThat(coupons).hasSize(1);
         assertThat(coupons.get(0).getCouponGroup()).isEqualTo(couponGroup);
         assertThat(coupons.get(0).getMaxCount()).isEqualTo(coupon.getMaxCount());
+
+        assertThat(coupons).hasSize(1);
+        assertThat(coupons.get(0).getStatus()).isEqualTo(CouponStatus.DELETED);
 
     }
 
@@ -87,6 +91,8 @@ public class UserCouponServiceTest extends IntegrationTest {
         assertThat(userCoupons.get(0).getWorkspaceId()).isEqualTo(workspaceId);
         assertThat(userCoupons.get(0).getUsageStatus()).isEqualTo(CouponUsageStatus.USED);
 
+
+
     }
 
     private Coupon getCoupon() {
@@ -96,7 +102,7 @@ public class UserCouponServiceTest extends IntegrationTest {
         String name = "테스트 쿠폰";
         CouponTag couponTag = CouponTag.BOSS_EVENT;
         CouponGroup couponGroup = CouponGroup.BOSS_STORE;
-        Long maxCount = 100L;
+        Long maxCount = 1L;
         String creatorId = "USER-2";
 
         LocalDateTime issueStartTime = LocalDateTime.of(2025, 3, 9, 0, 0, 0);
