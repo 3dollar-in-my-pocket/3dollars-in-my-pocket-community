@@ -32,7 +32,7 @@ public class Coupon extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name; // 쿠폰명
 
-    @Column(nullable = false, length = 300)
+    @Column(length = 300)
     private String description; // 쿠폰 설명
 
     @Enumerated(EnumType.STRING)
