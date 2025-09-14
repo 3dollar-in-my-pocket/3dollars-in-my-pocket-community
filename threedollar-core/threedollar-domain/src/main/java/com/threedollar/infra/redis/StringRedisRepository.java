@@ -16,17 +16,21 @@ public interface StringRedisRepository<K extends StringRedisKey<K, V>, V> {
 
     void setWithTtl(K k, V v, Duration ttl);
 
-    void incr(K k);
+    default long incr(K k) {
+        return incrBy(k, 1);
+    }
 
     void incrBulk(List<K> keys);
 
-    void incrBy(K k, long value);
+    long incrBy(K k, long value);
 
-    void decr(K k);
+    default long decr(K k) {
+        return decrBy(k, 1);
+    };
 
     void decrBulk(List<K> keys);
 
-    void decrBy(K k, long value);
+    long decrBy(K k, long value);
 
     void del(K k);
 
