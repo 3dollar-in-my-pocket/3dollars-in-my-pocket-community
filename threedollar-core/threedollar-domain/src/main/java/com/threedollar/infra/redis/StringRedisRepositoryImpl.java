@@ -1,5 +1,7 @@
 package com.threedollar.infra.redis;
 
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -85,11 +87,6 @@ public class StringRedisRepositoryImpl<K extends StringRedisKey<K, V>, V> implem
     }
 
     @Override
-    public void incr(K k) {
-        incrBy(k, 1);
-    }
-
-    @Override
     public void incrBulk(List<K> keys) {
         redisTemplate.executePipelined((RedisCallback<Object>) pipeline -> {
             keys.forEach(k -> pipeline.stringCommands().incr(k.getKey().getBytes(StandardCharsets.UTF_8)));
@@ -98,17 +95,12 @@ public class StringRedisRepositoryImpl<K extends StringRedisKey<K, V>, V> implem
     }
 
     @Override
-    public void incrBy(K k, long value) {
+    public long incrBy(K k, long value) {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.increment(k.getKey(), value);
-
+        return Optional.ofNullable(operations.increment(k.getKey(), value)).orElse(0L);
     }
 
-    @Override
-    public void decr(K k) {
-        decrBy(k, 1);
 
-    }
 
     @Override
     public void decrBulk(List<K> keys) {
@@ -119,9 +111,9 @@ public class StringRedisRepositoryImpl<K extends StringRedisKey<K, V>, V> implem
     }
 
     @Override
-    public void decrBy(K k, long value) {
+    public long decrBy(K k, long value) {
         ValueOperations<String, String> operations = redisTemplate.opsForValue();
-        operations.decrement(k.getKey(), value);
+        return Optional.ofNullable(operations.decrement(k.getKey(), value)).orElse(0L);
     }
 
     @Override
