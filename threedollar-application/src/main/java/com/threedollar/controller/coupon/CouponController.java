@@ -4,8 +4,10 @@ import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
 import com.threedollar.service.CouponCreateFacadeService;
-import com.threedollar.service.dto.CouponResponse;
-import com.threedollar.service.dto.request.CouponCreateRequest;
+import com.threedollar.service.coupon.dto.response.CouponExistenceResponse;
+import com.threedollar.service.coupon.dto.response.CouponResponse;
+import com.threedollar.service.coupon.dto.request.CouponCreateRequest;
+import com.threedollar.service.coupon.dto.request.CouponExistenceBulkRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,7 +34,6 @@ public class CouponController {
         @Valid @RequestBody CouponCreateRequest request) {
         couponCreateFacadeService.create(authContext.getWorkspaceId(), ticketId, request);
         return ApiResponse.OK;
-
     }
 
     @GetMapping("/v1/ticket/{ticketId}/coupon/{couponId}")
@@ -42,4 +45,13 @@ public class CouponController {
         return ApiResponse.success(response);
     }
 
+    @GetMapping("/v1/ticket/{ticketId}/coupon/existence/bulk")
+    @Operation(summary = "쿠폰 존재 여부 확인(다건)")
+    public ApiResponse<List<CouponExistenceResponse>> checkExistenceBulk(@PathVariable String ticketId,
+        @RequestApiKey ApiKeyContext authContext,
+        @Valid @RequestBody CouponExistenceBulkRequest request) {
+        List<CouponExistenceResponse> responses = couponCreateFacadeService.checkCouponsExistence(
+            authContext.getWorkspaceId(), ticketId, request.getCouponIds());
+        return ApiResponse.success(responses);
+    }
 }
