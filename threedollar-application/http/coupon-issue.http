@@ -1,0 +1,11 @@
+### Coupon 을 발급 받습니다.
+
+POST {{host_api}}/community/v1/ticket/1/coupon/3/issue
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+
+{
+    "ownerId": "user-1",
+    "couponId": "1"
+}
+
