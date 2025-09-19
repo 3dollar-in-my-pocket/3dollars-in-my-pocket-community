@@ -1,4 +1,4 @@
-package com.threedollar.service.dto;
+package com.threedollar.service.coupon.dto.response;
 
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponStatus;

@@ -5,6 +5,9 @@ import com.threedollar.common.exception.NotFoundException;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponRepository;
 import com.threedollar.domain.coupon.CouponStatus;
+
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,4 +32,11 @@ public class CouponQueryService {
         return coupon;
     }
 
+    @Transactional(readOnly = true)
+    public Set<Long> findExistingCouponIds(String workspaceId, String ticketId, Set<Long> couponIds,
+        Collection<CouponStatus> status) {
+        return couponRepository.findExistingIds(workspaceId, ticketId, couponIds, status);
+    }
+
 }
+

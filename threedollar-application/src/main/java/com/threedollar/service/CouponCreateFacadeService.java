@@ -4,10 +4,13 @@ import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponStatus;
 import com.threedollar.domain.coupon.service.CouponCreateService;
 import com.threedollar.service.coupon.CouponQueryService;
-import com.threedollar.service.dto.CouponResponse;
-import com.threedollar.service.dto.request.CouponCreateRequest;
+import com.threedollar.service.coupon.dto.response.CouponExistenceResponse;
+import com.threedollar.service.coupon.dto.response.CouponResponse;
+import com.threedollar.service.coupon.dto.request.CouponCreateRequest;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,4 +37,12 @@ public class CouponCreateFacadeService {
     }
 
 
+    public List<CouponExistenceResponse> checkCouponsExistence(String workspaceId, String ticketId, Set<Long> couponIds) {
+        Set<Long> existing = couponQueryService.findExistingCouponIds(workspaceId, ticketId, Set.copyOf(couponIds),
+            EnumSet.of(CouponStatus.ACTIVE));
+
+        return couponIds.stream()
+            .map(id -> CouponExistenceResponse.of(id, existing.contains(id)))
+            .toList();
+    }
 }

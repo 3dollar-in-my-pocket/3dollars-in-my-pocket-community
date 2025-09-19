@@ -25,4 +25,17 @@ GET {{host_api}}/community/v1/ticket/1/coupon/3
 X-Community-Api-Key: {{api_key}}
 
 
+### 쿠폰 존재 여부 확인
+GET {{host_api}}/community/v1/ticket/1/coupon/existence/bulk
+X-Community-Api-Key: {{api_key}}
+Content-Type: application/json
+
+{
+    "couponIds": [
+        1,
+        2,
+        3
+    ]
+}
+
 

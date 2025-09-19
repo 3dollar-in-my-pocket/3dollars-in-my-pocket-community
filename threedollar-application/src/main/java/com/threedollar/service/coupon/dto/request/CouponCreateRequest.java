@@ -1,4 +1,4 @@
-package com.threedollar.service.dto.request;
+package com.threedollar.service.coupon.dto.request;
 
 import com.threedollar.domain.coupon.DateTimeInterval;
 import lombok.Getter;
