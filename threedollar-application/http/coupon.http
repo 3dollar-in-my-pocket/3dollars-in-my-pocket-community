@@ -14,9 +14,15 @@ Content-Type: application/json
   },
   "name": "뽀미 간식 쿠폰",
   "description": "뽀미가 좋아하는 간식 쿠폰입니다.",
-  "usableDateTime": {
+  "usageDateTime": {
     "startDateTime": "2025-02-03T12:11:17.597Z",
     "endDateTime": "2025-02-02T12:11:17.597Z"
   }
 }
+
+### Coupon 단건 조회
+GET {{host_api}}/community/v1/ticket/1/coupon/3
+X-Community-Api-Key: {{api_key}}
+
+
 

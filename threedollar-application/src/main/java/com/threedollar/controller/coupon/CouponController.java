@@ -4,11 +4,13 @@ import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
 import com.threedollar.service.CouponCreateFacadeService;
+import com.threedollar.service.dto.CouponResponse;
 import com.threedollar.service.dto.request.CouponCreateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,10 +28,18 @@ public class CouponController {
     public ApiResponse<String> create(@PathVariable String ticketId,
         @RequestApiKey ApiKeyContext authContext,
         @Valid @RequestBody CouponCreateRequest request) {
-
         couponCreateFacadeService.create(authContext.getWorkspaceId(), ticketId, request);
         return ApiResponse.OK;
 
+    }
+
+    @GetMapping("/v1/ticket/{ticketId}/coupon/{couponId}")
+    @Operation(summary = "쿠폰 단건 조회")
+    public ApiResponse<CouponResponse> get(@PathVariable String ticketId,
+        @PathVariable Long couponId,
+        @RequestApiKey ApiKeyContext authContext) {
+        CouponResponse response = couponCreateFacadeService.getCouponById(authContext.getWorkspaceId(), ticketId, couponId);
+        return ApiResponse.success(response);
     }
 
 }
