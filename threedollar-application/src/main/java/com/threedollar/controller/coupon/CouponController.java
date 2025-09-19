@@ -4,10 +4,12 @@ import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
 import com.threedollar.service.CouponCreateFacadeService;
+import com.threedollar.service.coupon.CouponIssueFacadeService;
 import com.threedollar.service.coupon.dto.response.CouponExistenceResponse;
 import com.threedollar.service.coupon.dto.response.CouponResponse;
 import com.threedollar.service.coupon.dto.request.CouponCreateRequest;
 import com.threedollar.service.coupon.dto.request.CouponExistenceBulkRequest;
+import com.threedollar.service.coupon.dto.request.CouponUseRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +29,7 @@ import java.util.List;
 public class CouponController {
 
     private final CouponCreateFacadeService couponCreateFacadeService;
+    private final CouponIssueFacadeService couponIssueFacadeService;
 
     @PostMapping("/v1/ticket/{ticketId}/coupon")
     @Operation(summary = "쿠폰 생성")
@@ -53,5 +57,15 @@ public class CouponController {
         List<CouponExistenceResponse> responses = couponCreateFacadeService.checkCouponsExistence(
             authContext.getWorkspaceId(), ticketId, request.getCouponIds());
         return ApiResponse.success(responses);
+    }
+
+    @PatchMapping("/v1/ticket/{ticketId}/coupon/{couponId}/use")
+    @Operation(summary = "쿠폰 사용 처리")
+    public ApiResponse<String> use(@PathVariable String ticketId,
+        @PathVariable Long couponId,
+        @RequestApiKey ApiKeyContext authContext,
+        @Valid @RequestBody CouponUseRequest request) {
+        couponIssueFacadeService.use(authContext.getWorkspaceId(), ticketId, couponId, request.getOwnerId());
+        return ApiResponse.OK;
     }
 }

@@ -95,8 +95,9 @@ public class Coupon extends BaseEntity {
     }
 
     public boolean isUsablePeriodValid(LocalDateTime now) {
-       return issueDateTime != null && issueDateTime.getStartDateTime().isAfter(now)
-            && issueDateTime.getEndDateTime().isBefore(now);
+           return issueDateTime != null
+               && !issueDateTime.getStartDateTime().isAfter(now)  // start <= now
+               && !issueDateTime.getEndDateTime().isBefore(now);  // now <= end
     }
 
     /**

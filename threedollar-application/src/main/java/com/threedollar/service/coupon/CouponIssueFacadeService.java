@@ -4,6 +4,7 @@ import com.threedollar.controller.coupon.dto.CouponIssueRequest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponStatus;
 
+import com.threedollar.domain.coupon.IssueCoupon;
 import com.threedollar.service.coupon.issuecoupon.IssueCouponCountService;
 import com.threedollar.service.coupon.issuecoupon.IssueCouponQueryService;
 import com.threedollar.service.coupon.event.CouponQuotaCompletedEvent;
@@ -23,6 +24,8 @@ public class CouponIssueFacadeService {
     private final CouponIssueService couponIssueService;
 
     private final CouponQueryService couponQueryService;
+
+    private final CouponUseCountService couponUseCountService;
 
     private final IssueCouponQueryService issueCouponQueryService;
 
@@ -63,6 +66,24 @@ public class CouponIssueFacadeService {
         if (coupon.getMaxIssuableCount() != null && issuedCouponCount == coupon.getMaxIssuableCount()) {
             eventPublisher.publishEvent(new CouponQuotaCompletedEvent(coupon.getId(), workspaceId, ticketId, coupon.getMaxIssuableCount()));
         }
+    }
+
+    public void use(String workspaceId, String ticketId, Long couponId, String ownerId) {
+        // 쿠폰 존재 여부 및 사용 처리
+        IssueCoupon issueCoupon = issueCouponQueryService.findIssueCoupon(workspaceId, ticketId, couponId, ownerId);
+        Coupon coupon = couponQueryService.couponById(workspaceId, ticketId, issueCoupon.getCouponId(), EnumSet.of(CouponStatus.ACTIVE));
+
+        // 사용 가능 여부 확인
+        if (!coupon.isUsablePeriodValid(LocalDateTime.now())) {
+            throw new IllegalArgumentException("현재 시점에서 사용 가능한 쿠폰이 아닙니다.");
+        }
+
+        // 쿠폰 사용 처리
+        issueCoupon.use();
+
+        // 쿠폰 사용 건수 증가 처리
+        couponUseCountService.incrCouponUseCount(workspaceId, ticketId, couponId);
+
     }
 
 }
