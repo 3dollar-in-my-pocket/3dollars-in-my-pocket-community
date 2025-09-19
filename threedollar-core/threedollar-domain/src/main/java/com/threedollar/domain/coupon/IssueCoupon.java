@@ -69,6 +69,22 @@ public class IssueCoupon extends BaseEntity {
             .issuedDateTime(LocalDateTime.now())
             .build();
     }
+
+    public void use() {
+        if (this.status == IssueCouponStatus.USED) {
+            throw new IllegalStateException("이미 사용된 쿠폰입니다.");
+        }
+        if (this.status == IssueCouponStatus.DELETED) {
+            throw new IllegalStateException("삭제된 쿠폰입니다.");
+        }
+        
+        LocalDateTime now = LocalDateTime.now();
+        if (usableDateTime.getStartDateTime().isAfter(now) || usableDateTime.getEndDateTime().isBefore(now)) {
+            throw new IllegalArgumentException("현재 시점에서 사용 가능한 쿠폰이 아닙니다.");
+        }
+        
+        this.status = IssueCouponStatus.USED;
+    }
 }
 
 

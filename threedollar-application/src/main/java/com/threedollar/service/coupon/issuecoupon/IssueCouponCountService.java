@@ -15,6 +15,4 @@ public class IssueCouponCountService {
         return issueCouponCountRepository.incr(IssueCouponCountKey.of(workspaceId, ticketId, couponId));
     }
 
-
-
 }

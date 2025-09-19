@@ -1,7 +1,6 @@
 package com.threedollar.service.coupon.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
-import java.util.List;
 
 import java.util.Set;
 

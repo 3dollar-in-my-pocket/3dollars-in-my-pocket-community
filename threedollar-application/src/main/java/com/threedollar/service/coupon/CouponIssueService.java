@@ -17,6 +17,4 @@ public class CouponIssueService {
             usableDateTime);
         issueCouponRepository.save(issueCoupon);
     }
-
-
 }
