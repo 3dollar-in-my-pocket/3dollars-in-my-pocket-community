@@ -7,6 +7,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+
+import java.time.LocalDateTime;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -91,5 +94,18 @@ public class Coupon extends BaseEntity {
         return this.maxIssuableCount != null;
     }
 
+    public boolean isUsablePeriodValid(LocalDateTime now) {
+       return issueDateTime != null && issueDateTime.getStartDateTime().isAfter(now)
+            && issueDateTime.getEndDateTime().isBefore(now);
+    }
+
+    /**
+     * 발급 한도가 모두 찼을 때 상태를 ENDED 로 전환
+     */
+    public void endByQuota() {
+        if (this.status == CouponStatus.ACTIVE) {
+            this.status = CouponStatus.ENDED;
+        }
+    }
 
 }
