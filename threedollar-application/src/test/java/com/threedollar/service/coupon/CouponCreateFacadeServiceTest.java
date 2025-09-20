@@ -1,7 +1,6 @@
 package com.threedollar.service.coupon;
 
 import com.threedollar.domain.coupon.CouponStatus;
-import com.threedollar.service.CouponCreateFacadeService;
 import com.threedollar.service.coupon.dto.response.CouponExistenceResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
