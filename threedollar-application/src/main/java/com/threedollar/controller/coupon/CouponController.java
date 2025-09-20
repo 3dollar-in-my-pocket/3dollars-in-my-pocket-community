@@ -5,6 +5,7 @@ import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
 import com.threedollar.service.coupon.CouponCreateFacadeService;
 import com.threedollar.service.coupon.CouponIssueFacadeService;
+import com.threedollar.service.coupon.dto.request.CouponFilter;
 import com.threedollar.service.coupon.dto.response.CouponExistenceResponse;
 import com.threedollar.service.coupon.dto.response.CouponResponse;
 import com.threedollar.service.coupon.dto.request.CouponCreateRequest;
@@ -65,6 +66,17 @@ public class CouponController {
         @Valid @RequestBody CouponUseRequest request) {
         couponIssueFacadeService.use(authContext.getWorkspaceId(), ticketId, couponId, request.getOwnerId());
         return ApiResponse.OK;
+    }
+
+    @GetMapping("/v1/ticket/{ticketId}/provider/{providerId}/coupon")
+    @Operation(summary = "가게가 보유한 쿠폰 목록 조회")
+    public ApiResponse<List<CouponResponse>> getCouponsByOwnerId(@PathVariable String ticketId,
+        @PathVariable String providerId,
+        @RequestApiKey ApiKeyContext authContext,
+        @Valid CouponFilter filter) {
+        List<CouponResponse> responses = couponReadService.getCouponsByProvider(
+            authContext.getWorkspaceId(), ticketId, providerId, filter.getStatus());
+        return ApiResponse.success(responses);
     }
 
 

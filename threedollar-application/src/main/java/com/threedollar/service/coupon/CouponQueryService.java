@@ -6,6 +6,9 @@ import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponRepository;
 import com.threedollar.domain.coupon.CouponStatus;
 
+import com.threedollar.service.coupon.dto.response.CouponResponse;
+
+import java.util.List;
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,13 @@ public class CouponQueryService {
     public Set<Long> findExistingCouponIds(String workspaceId, String ticketId, Set<Long> couponIds,
         Collection<CouponStatus> status) {
         return couponRepository.findExistingIds(workspaceId, ticketId, couponIds, status);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Coupon> findCouponsByProvider(String workspaceId, String ticketId, String providerId,
+        Collection<CouponStatus> status) {
+        return couponRepository.findByWorkspaceIdAndTicketIdAndProviderIdAndStatusIn(
+            workspaceId, ticketId, providerId, status);
     }
 
 }
