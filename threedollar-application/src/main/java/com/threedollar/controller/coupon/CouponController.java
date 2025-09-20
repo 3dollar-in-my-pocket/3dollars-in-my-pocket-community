@@ -11,6 +11,9 @@ import com.threedollar.service.coupon.dto.response.CouponResponse;
 import com.threedollar.service.coupon.dto.request.CouponCreateRequest;
 import com.threedollar.service.coupon.dto.request.CouponExistenceBulkRequest;
 import com.threedollar.service.coupon.dto.request.CouponUseRequest;
+import com.threedollar.service.coupon.issuecoupon.IssueCouponReadService;
+import com.threedollar.service.coupon.issuecoupon.dto.request.IssueCouponFilter;
+import com.threedollar.service.coupon.issuecoupon.dto.response.IssueCouponResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,6 +32,7 @@ public class CouponController {
     private final CouponCreateFacadeService couponCreateFacadeService;
     private final CouponIssueFacadeService couponIssueFacadeService;
     private final CouponReadService couponReadService;
+    private final IssueCouponReadService issueCouponReadService;
 
     @PostMapping("/v1/ticket/{ticketId}/coupon")
     @Operation(summary = "쿠폰 생성")
@@ -70,7 +74,7 @@ public class CouponController {
 
     @GetMapping("/v1/ticket/{ticketId}/provider/{providerId}/coupon")
     @Operation(summary = "가게가 보유한 쿠폰 목록 조회")
-    public ApiResponse<List<CouponResponse>> getCouponsByOwnerId(@PathVariable String ticketId,
+    public ApiResponse<List<CouponResponse>> getCouponsByProviderId(@PathVariable String ticketId,
         @PathVariable String providerId,
         @RequestApiKey ApiKeyContext authContext,
         @Valid CouponFilter filter) {
@@ -79,6 +83,17 @@ public class CouponController {
         return ApiResponse.success(responses);
     }
 
+
+    @Operation(summary = "유저가 보유한 쿠폰 목록 조회")
+    @GetMapping("/v1/ticket/{ticketId}/owner/{ownerId}/coupon")
+    public ApiResponse<List<IssueCouponResponse>> getCouponsByOwnerId(@PathVariable String ticketId,
+        @PathVariable String ownerId,
+        @RequestApiKey ApiKeyContext authContext,
+        @Valid IssueCouponFilter filter) {
+        List<IssueCouponResponse> responses = issueCouponReadService.findCouponByOwner(
+            authContext.getWorkspaceId(), ticketId, ownerId, filter.getStatus());
+        return ApiResponse.success(responses);
+    }
 
 
 }
