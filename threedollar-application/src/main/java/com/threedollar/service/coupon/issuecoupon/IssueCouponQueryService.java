@@ -20,9 +20,11 @@ public class IssueCouponQueryService {
 
     @Transactional
     public IssueCoupon findIssueCoupon(String workspaceId, String ticketId, Long couponId, String ownerId) {
-        return issueCouponRepository.findByWorkspaceIdAndTicketIdAndCouponIdAndOwnerId(
-            workspaceId, ticketId, couponId, ownerId
-        ).orElseThrow(() -> new NotFoundException(String.format("발급된 쿠폰 (%s) 을 찾을 수 없습니다.", couponId)));
-
+        IssueCoupon issueCoupon = issueCouponRepository.findByWorkspaceIdAndTicketIdAndCouponIdAndOwnerId(
+            workspaceId, ticketId, couponId, ownerId);
+        if (issueCoupon == null) {
+            throw new NotFoundException(String.format("발급된 쿠폰 (%s) 을 찾을 수 없습니다.", couponId));
+        }
+        return issueCoupon;
     }
 }
