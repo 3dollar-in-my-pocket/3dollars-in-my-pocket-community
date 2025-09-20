@@ -3,7 +3,7 @@ package com.threedollar.controller.coupon;
 import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
-import com.threedollar.service.CouponCreateFacadeService;
+import com.threedollar.service.coupon.CouponCreateFacadeService;
 import com.threedollar.service.coupon.CouponIssueFacadeService;
 import com.threedollar.service.coupon.dto.response.CouponExistenceResponse;
 import com.threedollar.service.coupon.dto.response.CouponResponse;
@@ -27,6 +27,7 @@ public class CouponController {
 
     private final CouponCreateFacadeService couponCreateFacadeService;
     private final CouponIssueFacadeService couponIssueFacadeService;
+    private final CouponReadService couponReadService;
 
     @PostMapping("/v1/ticket/{ticketId}/coupon")
     @Operation(summary = "쿠폰 생성")
@@ -42,7 +43,7 @@ public class CouponController {
     public ApiResponse<CouponResponse> get(@PathVariable String ticketId,
         @PathVariable Long couponId,
         @RequestApiKey ApiKeyContext authContext) {
-        CouponResponse response = couponCreateFacadeService.getCouponById(authContext.getWorkspaceId(), ticketId, couponId);
+        CouponResponse response = couponReadService.getCouponById(authContext.getWorkspaceId(), ticketId, couponId);
         return ApiResponse.success(response);
     }
 
