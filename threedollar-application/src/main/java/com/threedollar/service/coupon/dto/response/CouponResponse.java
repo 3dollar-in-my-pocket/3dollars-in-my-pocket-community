@@ -50,7 +50,7 @@ public class CouponResponse {
         this.usableDateTime = usableDateTime;
     }
 
-    public CouponResponse from(Coupon coupon) {
+    public static CouponResponse from(Coupon coupon) {
         return CouponResponse.builder()
             .couponId(coupon.getId())
             .workspaceId(coupon.getWorkspaceId())

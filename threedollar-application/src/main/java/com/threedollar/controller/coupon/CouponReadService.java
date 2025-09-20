@@ -9,6 +9,8 @@ import com.threedollar.service.coupon.dto.response.CouponResponse;
 
 import java.util.List;
 
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,16 @@ public class CouponReadService {
     public CouponResponse getCouponById(String workspaceId, String ticketId, Long couponId) {
         Coupon coupon = couponQueryService.couponById(workspaceId, ticketId, couponId,
             List.of(CouponStatus.ACTIVE));
-        return new CouponResponse().from(coupon);
+        return CouponResponse.from(coupon);
     }
+
+    public List<CouponResponse> getCouponsByProvider(String workspaceId, String ticketId, String providerId,
+        Set<CouponStatus> status) {
+        List<Coupon> coupons = couponQueryService.findCouponsByProvider(workspaceId, ticketId, providerId, status);
+        return coupons.stream()
+            .map(CouponResponse::from)
+            .toList();
+    }
+
 
 }

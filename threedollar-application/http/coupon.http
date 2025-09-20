@@ -39,3 +39,9 @@ Content-Type: application/json
 }
 
 
+### 가게가 보유한 Coupon 목록 조회
+GET {{host_api}}/community/v1/ticket/1/provider/store-1/coupon
+X-Community-Api-Key: {{api_key}}
+
+
+
