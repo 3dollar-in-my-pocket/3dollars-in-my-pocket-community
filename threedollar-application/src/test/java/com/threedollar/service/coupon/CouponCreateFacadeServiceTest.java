@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,20 +28,20 @@ class CouponCreateFacadeServiceTest {
     @Test
     void checkCouponsExistence_allIdsExist() {
         Set<Long> ids = Set.of(1L, 2L, 3L);
-        when(couponQueryService.findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE)))
+        when(couponQueryService.findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE)))
             .thenReturn(ids);
 
         List<CouponExistenceResponse> result = couponCreateFacadeService.checkCouponsExistence("ws", "t", ids);
 
         assertThat(result).hasSize(3);
         result.forEach(r -> assertThat(isExists(r)).isTrue());
-        verify(couponQueryService).findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE));
+        verify(couponQueryService).findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE));
     }
 
     @Test
     void checkCouponsExistence_someIdsMissing() {
         Set<Long> ids = Set.of(1L, 2L, 3L, 4L);
-        when(couponQueryService.findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE)))
+        when(couponQueryService.findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE)))
             .thenReturn(Set.of(1L, 3L));
 
         List<CouponExistenceResponse> result = couponCreateFacadeService.checkCouponsExistence("ws", "t", ids);
@@ -55,7 +56,7 @@ class CouponCreateFacadeServiceTest {
     @Test
     void checkCouponsExistence_noIdsExist() {
         Set<Long> ids = Set.of(10L, 20L);
-        when(couponQueryService.findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE)))
+        when(couponQueryService.findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE)))
             .thenReturn(Set.of());
 
         List<CouponExistenceResponse> result = couponCreateFacadeService.checkCouponsExistence("ws", "t", ids);
@@ -67,13 +68,13 @@ class CouponCreateFacadeServiceTest {
     @Test
     void checkCouponsExistence_emptyInputReturnsEmptyList() {
         Set<Long> ids = Set.of();
-        when(couponQueryService.findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE)))
+        when(couponQueryService.findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE)))
             .thenReturn(Set.of());
 
         List<CouponExistenceResponse> result = couponCreateFacadeService.checkCouponsExistence("ws", "t", ids);
 
         assertThat(result).isEmpty();
-        verify(couponQueryService).findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE));
+        verify(couponQueryService).findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE));
     }
 
     @Test
@@ -86,13 +87,13 @@ class CouponCreateFacadeServiceTest {
     @Test
     void checkCouponsExistence_doesNotMutateInputSet() {
         Set<Long> ids = Set.of(5L, 6L);
-        when(couponQueryService.findExistingCouponIds("ws", "t", ids, List.of(CouponStatus.ACTIVE)))
+        when(couponQueryService.findExistingCouponIds("ws", "t", ids, EnumSet.of(CouponStatus.ACTIVE)))
             .thenReturn(Set.of(5L));
 
         couponCreateFacadeService.checkCouponsExistence("ws", "t", ids);
 
         ArgumentCaptor<Set<Long>> captor = ArgumentCaptor.forClass(Set.class);
-        verify(couponQueryService).findExistingCouponIds(eq("ws"), eq("t"), captor.capture(), eq(List.of(CouponStatus.ACTIVE)));
+        verify(couponQueryService).findExistingCouponIds(eq("ws"), eq("t"), captor.capture(), eq(EnumSet.of(CouponStatus.ACTIVE)));
         assertThat(captor.getValue()).isUnmodifiable();
     }
 

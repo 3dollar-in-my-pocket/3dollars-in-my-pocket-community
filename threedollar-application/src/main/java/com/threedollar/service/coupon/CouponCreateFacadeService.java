@@ -25,7 +25,7 @@ public class CouponCreateFacadeService {
         Coupon coupon = couponCreateService.create(workspaceId, ticketId, request.getProviderId(),
             request.getCreatorId(), request.getName(), request.getDescription(),
             request.getMaxIssuableCount(), request.getIssueDateTime(), request.getUsageDateTime());
-        return new CouponResponse().from(coupon);
+        return CouponResponse.from(coupon);
 
     }
 
