@@ -13,7 +13,6 @@ import com.threedollar.service.sticker.dto.request.AddStickerActionRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +44,7 @@ public class StickerActionServiceTest extends IntegrationTest {
         // given
         Sticker sticker = createSticker();
         AddStickerActionRequest request = getRequest(sticker);
-        String workspaceId = "three-dollar-dev-1";
+        String workspaceId = sticker.getWorkspaceId(); // 스티커와 동일한 workspaceId 사용
         Set<Long> stickerIds = Set.of(sticker.getId());
 
         // when
