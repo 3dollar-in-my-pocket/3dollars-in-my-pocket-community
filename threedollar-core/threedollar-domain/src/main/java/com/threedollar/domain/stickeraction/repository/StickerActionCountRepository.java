@@ -45,4 +45,12 @@ public class StickerActionCountRepository {
         return stickerRedisRepository.get(stickerActionCountKey);
     }
 
+    public void deleteByKey(StickerActionCountKey key) {
+        stickerRedisRepository.del(key);
+    }
+
+    public void deleteBulkByKeys(List<StickerActionCountKey> keys) {
+        stickerRedisRepository.delBulk(keys);
+    }
+
 }
