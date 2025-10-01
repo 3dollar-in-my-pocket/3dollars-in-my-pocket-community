@@ -13,6 +13,7 @@ import com.threedollar.service.sticker.dto.request.AddStickerActionRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,10 +34,18 @@ public class StickerActionServiceTest extends IntegrationTest {
     @Autowired
     private StickerActionCountRepository stickerActionCountRepository;
 
+    private final List<StickerActionCountKey> createdRedisKeys = new ArrayList<>();
+
     @AfterEach
     void cleanUp() {
         stickerActionRepository.deleteAll();
         stickerRepository.deleteAll();
+
+        // 테스트에서 생성된 Redis 키들만 삭제
+        if (!createdRedisKeys.isEmpty()) {
+            stickerActionCountRepository.deleteBulkByKeys(createdRedisKeys);
+            createdRedisKeys.clear();
+        }
     }
 
     @Test
@@ -54,6 +63,7 @@ public class StickerActionServiceTest extends IntegrationTest {
         StickerAction stickerAction = StickerAction.newInstance(sticker.getStickerGroup(), workspaceId, stickerIds, request.getAccountId(), request.getTargetId());
         Long stickerCount = getStickerCount(sticker, workspaceId, request.getTargetId());
         assertStickerAction(stickerAction, sticker.getStickerGroup(), stickerAction.getTargetId(), stickerAction.getAccountId(), stickerAction.getStickerIds());
+
         assertThat(stickerCount).isEqualTo(1L);
 
     }
@@ -63,7 +73,7 @@ public class StickerActionServiceTest extends IntegrationTest {
         // given
         Sticker sticker = createSticker();
         AddStickerActionRequest request = getRequest(sticker);
-        String workspaceId = "three-dollar-dev";
+        String workspaceId = sticker.getWorkspaceId(); // 스티커와 동일한 workspaceId 사용
         StickerAction stickerAction = StickerAction.newInstance(sticker.getStickerGroup(), workspaceId, Set.of(sticker.getId()), request.getAccountId(), request.getTargetId());
         stickerActionRepository.save(stickerAction);
         stickerActionCountRepository.incrBulkByCount(sticker.getStickerGroup(), workspaceId, request.getTargetId(), Set.of(sticker.getId()));
@@ -81,9 +91,9 @@ public class StickerActionServiceTest extends IntegrationTest {
     void 스티커를_제거한다() {
         // given
         Sticker sticker = createSticker();
-        String accountId = "USER999L";
-        String targetId = "1";
-        String workspaceId = "three-dollar-dev-2";
+        String accountId = "USER999L_" + System.nanoTime(); // 고유한 accountId
+        String targetId = "1_" + System.nanoTime(); // 고유한 targetId
+        String workspaceId = sticker.getWorkspaceId(); // 스티커와 동일한 workspaceId 사용
         StickerAction stickerAction = stickerActionRepository.save(StickerAction.newInstance(sticker.getStickerGroup(), workspaceId, Set.of(sticker.getId()), accountId, targetId));
         stickerActionCountRepository.incrBulkByCount(sticker.getStickerGroup(), workspaceId, targetId, Set.of(sticker.getId()));
 
@@ -120,8 +130,8 @@ public class StickerActionServiceTest extends IntegrationTest {
 
 
     private AddStickerActionRequest getRequest(Sticker sticker) {
-        String targetId = "POLL900";
-        String accountId = "USER_ACCOUNT999L";
+        String targetId = "POLL900_" + System.nanoTime(); // 고유한 targetId 사용
+        String accountId = "USER_ACCOUNT999L_" + System.nanoTime(); // 고유한 accountId 사용
         return AddStickerActionRequest.builder()
             .targetId(targetId)
             .stickerNames(Set.of(sticker.getName()))
@@ -131,14 +141,16 @@ public class StickerActionServiceTest extends IntegrationTest {
 
     private Sticker createSticker() {
         String imageUrl = "imageUrl";
-        String workspaceId = "three-dollar-test-22";
+        String workspaceId = "three-dollar-test-" + System.nanoTime(); // 고유한 workspaceId 사용
         StickerGroup stickerGroup = StickerGroup.POLL_COMMENT;
         String stickerName = "LIKE";
         return stickerRepository.save(Sticker.newInstance(imageUrl, workspaceId, stickerName, stickerGroup));
     }
 
     private Long getStickerCount(Sticker sticker, String workspaceId, String targetId) {
-        return stickerActionCountRepository.getStickerCount(StickerActionCountKey.of(sticker.getStickerGroup(), workspaceId, targetId, sticker.getId()));
+        StickerActionCountKey key = StickerActionCountKey.of(sticker.getStickerGroup(), workspaceId, targetId, sticker.getId());
+        createdRedisKeys.add(key); // 사용된 키 추적
+        return stickerActionCountRepository.getStickerCount(key);
     }
 
 }
