@@ -3,6 +3,10 @@ package com.threedollar.controller.coupon;
 import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
+import com.threedollar.controller.coupon.dto.CouponAndCursor;
+import com.threedollar.controller.coupon.dto.IssueCouponAndCursor;
+import com.threedollar.controller.coupon.dto.request.CouponAndCursorRequest;
+import com.threedollar.controller.coupon.dto.request.IssueCouponAndCursorRequest;
 import com.threedollar.service.coupon.CouponCreateFacadeService;
 import com.threedollar.service.coupon.CouponIssueFacadeService;
 import com.threedollar.service.coupon.dto.request.CouponFilter;
@@ -62,36 +66,38 @@ public class CouponController {
         return ApiResponse.success(responses);
     }
 
-    @PostMapping("/v1/ticket/{ticketId}/coupon/{couponId}/use")
+    @PostMapping("/v1/ticket/{ticketId}/coupon/{issueCouponId}/use")
     @Operation(summary = "쿠폰 사용 처리")
     public ApiResponse<String> use(@PathVariable String ticketId,
-        @PathVariable Long couponId,
+        @PathVariable Long issueCouponId,
         @RequestApiKey ApiKeyContext authContext,
         @Valid @RequestBody CouponUseRequest request) {
-        couponIssueFacadeService.use(authContext.getWorkspaceId(), ticketId, couponId, request.getOwnerId());
+        couponIssueFacadeService.use(authContext.getWorkspaceId(), ticketId, issueCouponId, request.getOwnerId());
         return ApiResponse.OK;
     }
 
+
     @GetMapping("/v1/ticket/{ticketId}/provider/{providerId}/coupon")
     @Operation(summary = "가게가 보유한 쿠폰 목록 조회")
-    public ApiResponse<List<CouponResponse>> getCouponsByProviderId(@PathVariable String ticketId,
+    public ApiResponse<CouponAndCursor> getCouponsByProviderId(@PathVariable String ticketId,
         @PathVariable String providerId,
         @RequestApiKey ApiKeyContext authContext,
-        @Valid CouponFilter filter) {
-        List<CouponResponse> responses = couponReadService.getCouponsByProvider(
-            authContext.getWorkspaceId(), ticketId, providerId, filter.getStatus());
+        @Valid CouponFilter filter,
+        @Valid CouponAndCursorRequest request) {
+        CouponAndCursor responses = couponReadService.getCouponsWithCursor(
+            authContext.getWorkspaceId(), ticketId, providerId, filter.getStatus(), request);
         return ApiResponse.success(responses);
     }
 
-
     @Operation(summary = "유저가 보유한 쿠폰 목록 조회")
     @GetMapping("/v1/ticket/{ticketId}/owner/{ownerId}/coupon")
-    public ApiResponse<List<IssueCouponResponse>> getCouponsByOwnerId(@PathVariable String ticketId,
+    public ApiResponse<IssueCouponAndCursor> getCouponsByOwnerId(@PathVariable String ticketId,
         @PathVariable String ownerId,
         @RequestApiKey ApiKeyContext authContext,
-        @Valid IssueCouponFilter filter) {
-        List<IssueCouponResponse> responses = issueCouponReadService.findCouponByOwner(
-            authContext.getWorkspaceId(), ticketId, ownerId, filter.getStatus());
+        @Valid IssueCouponFilter filter,
+        IssueCouponAndCursorRequest request) {
+        IssueCouponAndCursor responses = issueCouponReadService.getIssueCouponsWithCursor(
+            authContext.getWorkspaceId(), ticketId, ownerId, filter.getStatus(), request.getSize());
         return ApiResponse.success(responses);
     }
 

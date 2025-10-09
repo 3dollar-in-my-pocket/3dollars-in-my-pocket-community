@@ -1,9 +1,12 @@
 package com.threedollar.service.coupon.issuecoupon;
 
 import com.threedollar.common.exception.NotFoundException;
+import com.threedollar.controller.coupon.dto.IssueCouponAndCursor;
 import com.threedollar.domain.coupon.IssueCoupon;
 
 import com.threedollar.domain.coupon.IssueCouponStatus;
+
+import com.threedollar.domain.coupon.repository.IssueCouponRepository;
 
 import java.util.List;
 
@@ -12,21 +15,25 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.FrameworkServlet;
 
 @RequiredArgsConstructor
 @Service
 public class IssueCouponQueryService {
 
     private final IssueCouponRepository issueCouponRepository;
+    private final FrameworkServlet frameworkServlet;
 
-    public boolean existsIssueCoupon(String workspaceId, String ticketId, Long couponId, String ownerId) {
+    public boolean existsIssueCoupon(String workspaceId, String ticketId, Long couponId,
+        String ownerId) {
         return issueCouponRepository.existsByWorkspaceIdAndTicketIdAndIdAndOwnerId(
             workspaceId, ticketId, couponId, ownerId
         );
     }
 
     @Transactional
-    public IssueCoupon findIssueCoupon(String workspaceId, String ticketId, Long couponId, String ownerId) {
+    public IssueCoupon findIssueCoupon(String workspaceId, String ticketId, Long couponId,
+        String ownerId) {
         IssueCoupon issueCoupon = issueCouponRepository.findByWorkspaceIdAndTicketIdAndCouponIdAndOwnerId(
             workspaceId, ticketId, couponId, ownerId);
         if (issueCoupon == null) {
@@ -36,9 +43,17 @@ public class IssueCouponQueryService {
     }
 
     @Transactional
-    public List<IssueCoupon> findIssueCouponsByOwner(String workspaceId, String ticketId, String ownerId,
+    public List<IssueCoupon> findIssueCouponsByOwner(String workspaceId, String ticketId,
+        String ownerId,
         Set<IssueCouponStatus> status) {
         return issueCouponRepository.findByWorkspaceIdAndTicketIdAndOwnerIdAndStatusIn(
             workspaceId, ticketId, ownerId, status);
+    }
+
+    @Transactional
+    public List<IssueCoupon> findIssueCouponsByOwnerWithLimit(String workspaceId,
+        String ticketId, String ownerId, Set<IssueCouponStatus> status, int size) {
+        return issueCouponRepository.findIssueCouponsByOwnerWithLimit(
+            workspaceId, ticketId, ownerId, status, size);
     }
 }

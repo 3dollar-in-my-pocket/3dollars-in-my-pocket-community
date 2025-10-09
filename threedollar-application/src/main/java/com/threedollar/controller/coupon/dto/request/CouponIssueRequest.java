@@ -1,4 +1,4 @@
-package com.threedollar.controller.coupon.dto;
+package com.threedollar.controller.coupon.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

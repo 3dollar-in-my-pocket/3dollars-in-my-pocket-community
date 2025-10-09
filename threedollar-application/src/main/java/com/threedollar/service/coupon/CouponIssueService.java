@@ -2,7 +2,7 @@ package com.threedollar.service.coupon;
 
 import com.threedollar.domain.coupon.DateTimeInterval;
 import com.threedollar.domain.coupon.IssueCoupon;
-import com.threedollar.service.coupon.issuecoupon.IssueCouponRepository;
+import com.threedollar.domain.coupon.repository.IssueCouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

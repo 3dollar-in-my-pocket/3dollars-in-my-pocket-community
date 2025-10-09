@@ -1,7 +1,7 @@
 package com.threedollar.domain.coupon.service;
 
 import com.threedollar.domain.coupon.Coupon;
-import com.threedollar.domain.coupon.CouponRepository;
+import com.threedollar.domain.coupon.repository.CouponRepository;
 import com.threedollar.domain.coupon.CouponStatus;
 import com.threedollar.domain.coupon.DateTimeInterval;
 import lombok.RequiredArgsConstructor;
