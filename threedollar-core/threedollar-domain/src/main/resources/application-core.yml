@@ -45,7 +45,7 @@ spring:
       hikari:
         maximum-pool-size: 10
     slave:
-      jdbc-url: jdbc:mariadb://localhost:23307/community_local
+      jdbc-url: jdbc:mariadb://localhost:23306/community_local
       username: root
       password: community
       hikari:

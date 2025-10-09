@@ -27,6 +27,7 @@ public class ApiResponse<T> {
 
     private T data;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> reasons;
 
     private ApiResponse(boolean ok, String error, T data, List<String> reason) {
@@ -50,6 +51,5 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> error(ErrorCode errorCode, List<String> reasons) {
         return new ApiResponse<>(false, errorCode.getCode(), null, reasons);
     }
-
 
 }

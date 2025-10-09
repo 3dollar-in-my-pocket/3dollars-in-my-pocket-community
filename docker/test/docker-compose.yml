@@ -1,19 +1,18 @@
 services:
   threedollar-mariadb-master:
     container_name: community-mariadb-test
-    image: docker.io/bitnami/mariadb:10.9
+    image: mariadb:11.4
     ports:
       - '33306:3306'
     restart: unless-stopped
     environment:
       - MARIADB_DATABASE=community_test
       - MARIADB_ROOT_PASSWORD=community
-      - ALLOW_EMPTY_PASSWORD=yes
     networks:
       - community-test-network
 
   threedollar-redis:
-    image: redis:6.0
+    image: redis:7.0-alpine
     container_name: community-redis-test
     command: redis-server --port 6379 --save "" --appendonly no
     ports:
