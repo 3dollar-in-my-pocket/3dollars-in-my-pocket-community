@@ -1,6 +1,6 @@
 package com.threedollar.service.coupon;
 
-import com.threedollar.controller.coupon.dto.CouponIssueRequest;
+import com.threedollar.controller.coupon.dto.request.CouponIssueRequest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponStatus;
 

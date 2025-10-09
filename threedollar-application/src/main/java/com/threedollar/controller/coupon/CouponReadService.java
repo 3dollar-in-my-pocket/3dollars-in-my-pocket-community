@@ -1,5 +1,7 @@
 package com.threedollar.controller.coupon;
 
+import com.threedollar.controller.coupon.dto.CouponAndCursor;
+import com.threedollar.controller.coupon.dto.request.CouponAndCursorRequest;
 import com.threedollar.domain.coupon.Coupon;
 import com.threedollar.domain.coupon.CouponStatus;
 
@@ -34,5 +36,18 @@ public class CouponReadService {
             .toList();
     }
 
+    public CouponAndCursor getCouponsWithCursor(String workspaceId, String ticketId, String providerId,
+        Set<CouponStatus> status, CouponAndCursorRequest request) {
+        List<Coupon> coupons = couponQueryService.findCouponsInfoWithLimit(workspaceId, ticketId, providerId, status,
+            request.getSize() + 1);
+        return getCouponAndCursor(coupons, request.getSize());
+    }
+
+    private CouponAndCursor getCouponAndCursor(List<Coupon> coupons, int size) {
+        if (coupons.isEmpty() || coupons.size() <= size) {
+            return CouponAndCursor.noMore(coupons);
+        }
+        return CouponAndCursor.hasMore(coupons);
+    }
 
 }

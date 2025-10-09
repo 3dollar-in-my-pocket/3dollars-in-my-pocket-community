@@ -3,10 +3,8 @@ package com.threedollar.service.coupon;
 
 import com.threedollar.common.exception.NotFoundException;
 import com.threedollar.domain.coupon.Coupon;
-import com.threedollar.domain.coupon.CouponRepository;
+import com.threedollar.domain.coupon.repository.CouponRepository;
 import com.threedollar.domain.coupon.CouponStatus;
-
-import com.threedollar.service.coupon.dto.response.CouponResponse;
 
 import java.util.List;
 import java.util.Set;
@@ -46,6 +44,13 @@ public class CouponQueryService {
         Collection<CouponStatus> status) {
         return couponRepository.findByWorkspaceIdAndTicketIdAndProviderIdAndStatusIn(
             workspaceId, ticketId, providerId, status);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Coupon> findCouponsInfoWithLimit(String workspaceId, String ticketId, String providerId,
+        Collection<CouponStatus> status, int size) {
+        return couponRepository.findByCouponInfoWithLimit(workspaceId, ticketId,
+            providerId, status, size);
     }
 
 }

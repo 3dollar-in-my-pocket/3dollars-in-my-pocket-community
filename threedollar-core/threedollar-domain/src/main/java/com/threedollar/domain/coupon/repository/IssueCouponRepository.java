@@ -1,4 +1,4 @@
-package com.threedollar.service.coupon.issuecoupon;
+package com.threedollar.domain.coupon.repository;
 
 import com.threedollar.domain.coupon.IssueCoupon;
 
@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IssueCouponRepository extends JpaRepository<IssueCoupon, Long> {
+public interface IssueCouponRepository extends JpaRepository<IssueCoupon, Long>, IssueCouponRepositoryCustom {
 
     // TODO: querydsl 로 쿼리 개선
     boolean existsByWorkspaceIdAndTicketIdAndIdAndOwnerId(String workspaceId, String ticketId, Long couponId, String ownerId);

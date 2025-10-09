@@ -1,7 +1,7 @@
 package com.threedollar.service.coupon.event;
 
 import com.threedollar.domain.coupon.Coupon;
-import com.threedollar.domain.coupon.CouponRepository;
+import com.threedollar.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;

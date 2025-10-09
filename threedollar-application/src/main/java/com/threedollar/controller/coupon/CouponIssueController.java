@@ -3,7 +3,7 @@ package com.threedollar.controller.coupon;
 import com.threedollar.common.dto.response.ApiResponse;
 import com.threedollar.config.interceptor.ApiKeyContext;
 import com.threedollar.config.resolver.RequestApiKey;
-import com.threedollar.controller.coupon.dto.CouponIssueRequest;
+import com.threedollar.controller.coupon.dto.request.CouponIssueRequest;
 import com.threedollar.service.coupon.CouponIssueFacadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;

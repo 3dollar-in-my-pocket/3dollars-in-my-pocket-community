@@ -5,7 +5,5 @@ X-Community-Api-Key: {{api_key}}
 Content-Type: application/json
 
 {
-    "ownerId": "user-1",
-    "couponId": "1"
-}
-
+    "ownerId": "user-1"
+ }
