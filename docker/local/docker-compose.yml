@@ -11,7 +11,7 @@ services:
       - MARIADB_DATABASE=community_local
       - MARIADB_ROOT_PASSWORD=community
     networks:
-      - communityer--local-network
+      - community-local-network
 
   threedollar-redis:
     image: redis:7.0-alpine
