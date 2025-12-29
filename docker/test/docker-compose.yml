@@ -1,15 +1,25 @@
 services:
-  threedollar-mariadb-master:
-    container_name: community-mariadb-test
-    image: mariadb:11.4
+  threedollar-mysql:
+    container_name: community-mysql-test
+    image: mysql:8.4
     ports:
       - '33306:3306'
     restart: unless-stopped
     environment:
-      - MARIADB_DATABASE=community_test
-      - MARIADB_ROOT_PASSWORD=community
+      - MYSQL_DATABASE=community_test
+      - MYSQL_ROOT_PASSWORD=community
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_0900_ai_ci
     networks:
       - community-test-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    stop_grace_period: 3s
 
   threedollar-redis:
     image: redis:7.0-alpine
@@ -20,6 +30,13 @@ services:
     restart: unless-stopped
     networks:
       - community-test-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    stop_grace_period: 3s
 
 networks:
   community-test-network:

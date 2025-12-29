@@ -6,13 +6,12 @@ spring:
       hibernate:
         default_batch_fetch_size: 300
         query.in_clause_parameter_padding: true
-        dialect: org.hibernate.dialect.MariaDBDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 5000
-      driver-class-name: org.mariadb.jdbc.Driver
   data:
     redis:
       timeout: 3000
@@ -39,13 +38,13 @@ spring:
         use_sql_comments: true
   datasource:
     master:
-      jdbc-url: jdbc:mariadb://localhost:23306/community_local
+      jdbc-url: jdbc:mysql://localhost:23306/community_local
       username: root
       password: community
       hikari:
         maximum-pool-size: 10
     slave:
-      jdbc-url: jdbc:mariadb://localhost:23306/community_local
+      jdbc-url: jdbc:mysql://localhost:23306/community_local
       username: root
       password: community
       hikari:
@@ -71,20 +70,20 @@ spring:
         format_sql: true
         use_sql_comments: true
   datasource:
-      master:
-        jdbc-url: jdbc:mariadb://localhost:33306/community_test
-        username: root
-        password: community
-        driver-class-name: org.mariadb.jdbc.Driver
-        hikari:
-          maximum-pool-size: 10
-      slave:
-        jdbc-url: jdbc:mariadb://localhost:33306/community_test
-        username: root
-        password: community
-        driver-class-name: org.mariadb.jdbc.Driver
-        hikari:
-          maximum-pool-size: 10
+    master:
+      jdbc-url: jdbc:mysql://localhost:33306/community_test
+      username: root
+      password: community
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 10
+    slave:
+      jdbc-url: jdbc:mysql://localhost:33306/community_test
+      username: root
+      password: community
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+        maximum-pool-size: 10
   data:
     redis:
       host: localhost

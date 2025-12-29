@@ -1,17 +1,27 @@
 services:
-  mariadb-master:
-    container_name: community-mariadb-local
-    image: mariadb:11.4
+  threedollar-mysql:
+    container_name: community-mysql-local
+    image: mysql:8.4
     ports:
-      - '23306:3306'
+      - "23306:3306"
     volumes:
-      - community-local-mariadb-master-volume:/var/lib/mysql
+      - community-local-mysql:/var/lib/mysql
     restart: unless-stopped
     environment:
-      - MARIADB_DATABASE=community_local
-      - MARIADB_ROOT_PASSWORD=community
+      - MYSQL_DATABASE=community_local
+      - MYSQL_ROOT_PASSWORD=community
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_0900_ai_ci
     networks:
       - community-local-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    stop_grace_period: 3s
 
   threedollar-redis:
     image: redis:7.0-alpine
@@ -21,14 +31,21 @@ services:
       - '26379:6379'
     restart: unless-stopped
     volumes:
-      - community-local-redis-volume:/data
+      - community-local-redis:/data
     networks:
       - community-local-network
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    stop_grace_period: 3s
 
 volumes:
-  community-local-mariadb-master-volume:
+  community-local-mysql:
     driver: local
-  community-local-redis-volume:
+  community-local-redis:
     driver: local
 
 networks:
