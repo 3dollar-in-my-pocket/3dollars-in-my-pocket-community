@@ -1,12 +1,12 @@
 # Step1: Build
-FROM openjdk:17-alpine AS build
+FROM eclipse-temurin:17-jdk-alpine AS build
 ENV HOME=/app
 WORKDIR $HOME
 COPY . $HOME
 RUN ./gradlew clean :threedollar-application:bootJar
 
 # Step2: Install Pinpoint agent
-FROM openjdk:17-alpine AS pinpoint
+FROM eclipse-temurin:17-jdk-alpine AS pinpoint
 WORKDIR /app/pinpoint-agent
 ENV PINPOINT_VERSION=2.5.4
 RUN apk add --no-cache curl unzip && \
@@ -15,7 +15,7 @@ RUN apk add --no-cache curl unzip && \
     rm pinpoint-agent-${PINPOINT_VERSION}.tar.gz
 
 # Step3: Run
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 ARG PROFILE
 ARG COLLECTOR_IP
