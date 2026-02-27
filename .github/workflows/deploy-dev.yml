@@ -16,7 +16,7 @@ jobs:
     environment: "dev"
     steps:
       - name: checkout@v2
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Version
         id: version
